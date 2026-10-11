@@ -1,0 +1,2031 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="icon" type="image/svg+xml" sizes="any" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2032%2032%22%3E%3Crect%20x=%220%22%20y=%224%22%20width=%2232%22%20height=%2228%22%20rx=%225%22%20fill=%22%231c5cab%22/%3E%3Crect%20x=%222%22%20y=%2212%22%20width=%2228%22%20height=%2218%22%20rx=%222%22%20fill=%22%23fff%22/%3E%3Crect%20x=%228%22%20y=%220%22%20width=%224%22%20height=%228%22%20rx=%222%22%20fill=%22%230d366b%22/%3E%3Crect%20x=%2220%22%20y=%220%22%20width=%224%22%20height=%228%22%20rx=%222%22%20fill=%22%230d366b%22/%3E%3Crect%20x=%224%22%20y=%2214%22%20width=%226%22%20height=%226%22%20fill=%22%23cde2fb%22/%3E%3Crect%20x=%2212%22%20y=%2214%22%20width=%228%22%20height=%226%22%20fill=%22%2386b6ef%22/%3E%3Crect%20x=%2222%22%20y=%2214%22%20width=%226%22%20height=%226%22%20fill=%22%23256abf%22/%3E%3Crect%20x=%224%22%20y=%2222%22%20width=%226%22%20height=%226%22%20fill=%22%2386b6ef%22/%3E%3Crect%20x=%2212%22%20y=%2222%22%20width=%228%22%20height=%226%22%20fill=%22%23d2540f%22/%3E%3Crect%20x=%2222%22%20y=%2222%22%20width=%226%22%20height=%226%22%20fill=%22%230d366b%22/%3E%3C/svg%3E">
+</head><body>
+<title>Ordinations-Terminbuch</title>
+<style>
+/* Layout: Kopf mit Kennzahlen; links Monatsraster, Suche und Einstellungen untereinander,
+   rechts das Tagesblatt des gewählten Tages mit eigener Bildlaufleiste. */
+:root{
+  --bg:#f4f6fa; --surface:#ffffff; --sunken:#e9edf5;
+  --ink:#141b2b; --muted:#566074; --faint:#8690a2;
+  --line:#d8deea; --line-strong:#aab4c6;
+  --pen:#1c4f9e;            /* Kugelschreiberblau der Einträge */
+  --accent:#1c5cab; --on-accent:#ffffff;
+  --today:#d2540f; --danger:#b3261e;
+  --tl-free:#d3dbe9;
+  --h1:#cde2fb; --h1-fg:#141b2b;
+  --h2:#86b6ef; --h2-fg:#141b2b;
+  --h3:#256abf; --h3-fg:#ffffff;
+  --h4:#0d366b; --h4-fg:#ffffff;
+  --display:"Sitka Display","Sitka Heading","Sitka Text",Charter,"Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --body:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e131d; --surface:#161c29; --sunken:#1e2636;
+    --ink:#e7ebf3; --muted:#a0aabb; --faint:#6f7a8e;
+    --line:#2a3345; --line-strong:#4a5670;
+    --pen:#8fbcf5; --accent:#5598e7; --on-accent:#0b111c;
+    --today:#f08a4b; --danger:#f2847c;
+    --tl-free:#2d374b;
+    --h1:#12305a; --h1-fg:#e7ebf3;
+    --h2:#1c5cab; --h2-fg:#ffffff;
+    --h3:#5598e7; --h3-fg:#0b111c;
+    --h4:#cde2fb; --h4-fg:#0b111c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e131d; --surface:#161c29; --sunken:#1e2636;
+  --ink:#e7ebf3; --muted:#a0aabb; --faint:#6f7a8e;
+  --line:#2a3345; --line-strong:#4a5670;
+  --pen:#8fbcf5; --accent:#5598e7; --on-accent:#0b111c;
+  --today:#f08a4b; --danger:#f2847c;
+  --tl-free:#2d374b;
+  --h1:#12305a; --h1-fg:#e7ebf3;
+  --h2:#1c5cab; --h2-fg:#ffffff;
+  --h3:#5598e7; --h3-fg:#0b111c;
+  --h4:#cde2fb; --h4-fg:#0b111c;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+.app{max-width:1180px;margin-inline:auto;padding-inline:clamp(16px,3vw,32px);padding-block:24px 56px;display:grid;gap:22px}
+h1,h2,h3,p{margin:0}
+h1,h2{font-family:var(--display);font-weight:600;text-wrap:balance;letter-spacing:-.005em}
+h1{font-size:clamp(26px,3.4vw,34px);line-height:1.1}
+h2{font-size:21px;line-height:1.2}
+h3{font-size:14px;font-weight:650}
+.eyebrow{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button,input,select,textarea{font:inherit;color:inherit}
+
+/* Kopf */
+.top{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-end;justify-content:space-between}
+.brand{display:grid;gap:4px;min-width:0}
+.brand .sub{color:var(--muted);font-size:14px}
+.stats{display:flex;flex-wrap:wrap;gap:12px 28px}
+.stat{display:grid;gap:2px;min-width:0}
+.stat .v{font-size:19px;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.25}
+.stat button.v{background:none;border:0;padding:0;text-align:left;color:var(--pen);cursor:pointer;text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:4px}
+.stat button.v:hover{text-decoration-color:currentColor}
+.demo{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;border:1px dashed var(--line-strong);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--muted)}
+.demo strong{color:var(--ink)}
+.demo.alert{border:1px solid var(--danger);color:var(--ink);background:var(--surface);position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:15}
+.fileline{font-size:13px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.fileline.bad{color:var(--danger)}
+
+/* Knöpfe */
+.btn{border:1px solid var(--line-strong);background:var(--surface);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:14px;line-height:1.3;white-space:nowrap}
+.btn:hover{border-color:var(--ink)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.sm{padding:4px 9px;font-size:13px}
+.btn.danger{color:var(--danger);border-color:var(--danger)}
+.btn.quiet{border-color:transparent;background:none;color:var(--muted)}
+.btn.quiet:hover{color:var(--ink);border-color:var(--line-strong)}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:7px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:6px 12px;cursor:pointer;font-size:13.5px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
+
+/* Raster */
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(310px,1fr);gap:28px;align-items:start}
+.left{display:grid;gap:22px;min-width:0;align-content:start}
+.overview{display:grid;gap:14px;min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between}
+.nav{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.range{font-weight:650;font-size:15px;margin-inline:6px}
+.barR{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.mc{display:inline-flex;gap:6px;align-items:center;font-size:13.5px;color:var(--muted)}
+.mc select{border:1px solid var(--line-strong);border-radius:7px;background:var(--surface);padding:5px 8px;color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:12.5px;color:var(--muted)}
+.legend .k{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1px solid transparent}
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px 26px;align-items:start}
+.month{display:grid;gap:8px;min-width:0;align-content:start;container-type:inline-size}
+.mhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.mhead span{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:17px repeat(7,minmax(0,1fr));gap:4px}
+.kw{font-size:9.5px;color:var(--faint);display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.wd.kwh{font-size:8.5px;letter-spacing:0}
+.wd{font-size:11px;text-align:center;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;padding-bottom:2px}
+.wd.on{color:var(--ink);font-weight:700}
+.c{position:relative;aspect-ratio:1;border:1px solid transparent;border-radius:6px;background:none;color:var(--faint);
+   display:grid;align-content:center;justify-items:center;gap:2px;padding:0;cursor:pointer;font-variant-numeric:tabular-nums;min-width:0}
+.c .n{font-size:clamp(13px,3.6cqw,30px);font-weight:600;line-height:1}
+.c .f{font-size:clamp(10px,2.5cqw,18px);line-height:1.1;white-space:nowrap}
+.c:hover{border-color:var(--line-strong)}
+.c.lv0{background:var(--surface);border-color:var(--line-strong);color:var(--ink)}
+.c.lv1{background:var(--h1);color:var(--h1-fg)}
+.c.lv2{background:var(--h2);color:var(--h2-fg)}
+.c.lv3{background:var(--h3);color:var(--h3-fg)}
+.c.lv4{background:var(--h4);color:var(--h4-fg)}
+.c.pp{background:var(--surface);border-color:var(--line);color:var(--ink);gap:3px}
+.c.shut{background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line) 4px 5.5px);color:var(--muted);border-color:var(--line)}
+.c.past{opacity:.42}
+.c.today::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--today);box-shadow:0 0 0 1.5px var(--surface)}
+.c[aria-pressed="true"]{outline:2.5px solid var(--ink);outline-offset:1.5px;opacity:1}
+.c.target{outline:2.5px dashed var(--today);outline-offset:1.5px;opacity:1}
+.tl{display:grid;gap:clamp(2px,.5cqw,5px);width:82%}
+.tl i{display:block;height:clamp(5px,1.5cqw,13px);border-radius:1.5px}
+
+/* Tagesblatt */
+.day{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px;display:flex;flex-direction:column;gap:12px;
+     position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);max-height:calc(100vh - 28px);min-width:0;scroll-margin-top:12px}
+.day .occ{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.strip{height:10px;border-radius:3px}
+.scale{display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums;margin-top:3px}
+.slots{list-style:none;margin:0;padding:0 6px 0 0;border-top:1px solid var(--line);overflow-y:auto;min-height:0}
+.slot{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:46px;padding:5px 0;border-bottom:1px solid var(--line)}
+.tm{display:grid}
+.tm time{font-variant-numeric:tabular-nums;font-weight:650;font-size:14.5px}
+.tm small{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.who{display:grid;min-width:0}
+.who strong{color:var(--pen);font-weight:650;overflow-wrap:anywhere}
+.who span{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.act{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.free{grid-column:2 / -1;text-align:left;border:1px dashed var(--line-strong);background:none;border-radius:7px;padding:7px 10px;color:var(--muted);cursor:pointer;display:flex;justify-content:space-between;gap:8px;font-variant-numeric:tabular-nums}
+.free:hover{border-style:solid;border-color:var(--accent);color:var(--ink)}
+.free b{font-weight:600;color:var(--accent)}
+.slot.edit{display:block;padding:12px 0}
+form.entry{display:grid;gap:8px;min-width:0}
+form.entry .row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.field{border:1px solid var(--line-strong);border-radius:7px;background:var(--bg);padding:7px 9px;width:100%;min-width:0}
+form.entry .row .field{flex:1 1 120px}
+.row3{display:flex;gap:8px;flex-wrap:wrap}
+.row3 label{display:grid;gap:3px;font-size:12px;color:var(--muted);flex:1 1 84px;min-width:0}
+.row3 label.wide{flex:1 1 140px}
+.freechips{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.dayfoot{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center}
+.note{font-size:13.5px;color:var(--muted)}
+.warn{font-size:13.5px;color:var(--danger)}
+
+/* Werkzeuge */
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px 28px;border-top:1px solid var(--line);padding-top:20px}
+.tool{display:grid;gap:10px;align-content:start;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hits{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.hits.col{display:grid}
+.hit{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:6px 10px;cursor:pointer;font-variant-numeric:tabular-nums;font-size:14px;text-align:left;width:100%}
+.hit:hover{border-color:var(--accent)}
+.hit em{font-style:normal;color:var(--pen);font-weight:650}
+.hit small{color:var(--faint)}
+details.set{border-top:1px solid var(--line);padding-top:16px}
+details.set summary{cursor:pointer;font-weight:650}
+.setgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px 28px;padding-top:16px}
+.setcol{display:grid;gap:10px;align-content:start;min-width:0}
+.setcol label{font-size:13.5px}
+.lab{display:grid;gap:4px}
+.hours{display:grid;gap:5px}
+.hrow{display:grid;grid-template-columns:minmax(96px,1fr) minmax(0,108px) minmax(0,108px);gap:8px;align-items:center}
+.hrow input[type="time"]{border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);padding:4px 6px;width:100%;min-width:0}
+.hrow input[type="time"]:disabled{opacity:.4}
+.check{display:flex;gap:8px;align-items:center}
+textarea.field{min-height:92px;font-family:ui-monospace,Consolas,monospace;font-size:12px;resize:vertical}
+.months.single{grid-template-columns:minmax(0,1fr)}
+.months.single .month{resize:horizontal;overflow:hidden;min-width:270px;max-width:100%;padding:3px 16px 16px 3px}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:hover{border-color:var(--line-strong)}
+.slot[draggable="true"]{cursor:grab}
+.slot.dragging{opacity:.4}
+.slot.dropbefore{box-shadow:inset 0 3px 0 var(--accent)}
+.demo.alert.still{position:static}
+.loading .layout{visibility:hidden}
+.slot.drop .free{border-style:solid;border-color:var(--accent);background:var(--h1);color:var(--h1-fg)}
+.c.drop{outline:2.5px dashed var(--accent);outline-offset:1.5px}
+.confirm{border:1px solid var(--danger);border-radius:8px;padding:10px 12px;display:grid;gap:8px;font-size:14px}
+.confirm ul{margin:0;padding-left:18px;font-variant-numeric:tabular-nums}
+.confirm .row{display:flex;gap:7px;flex-wrap:wrap}
+.sub summary{cursor:pointer;font-size:13.5px}
+.sub[open]{display:grid;gap:8px}
+.conlist{list-style:none;margin:0;padding:0;max-height:280px;overflow-y:auto;border:1px solid var(--line);border-radius:7px}
+.conlist li{display:flex;gap:6px;align-items:center;padding:3px 4px 3px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
+.conlist li:last-child{border-bottom:0}
+.conlist li.sep{background:var(--sunken);color:var(--muted);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;padding:5px 10px}
+.conlist .nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.conlist .none{color:var(--muted);padding:8px 10px}
+.tip{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:5px 9px;border-radius:6px;max-width:260px;font-variant-numeric:tabular-nums}
+
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .day{position:static;max-height:none}
+  .slots{overflow:visible;padding-right:0}
+}
+@media (prefers-reduced-motion:no-preference){ .c,.btn,.free{transition:border-color .12s,background-color .12s} }
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <p class="eyebrow">Terminbuch</p>
+      <h1 id="ttl">Ordination</h1>
+      <p class="sub" id="hoursLine"></p>
+      <p class="sub fileline" id="fileLine" hidden><span id="fileTxt"></span><button class="btn sm" data-act="dataSetup" id="btnDataSetup" hidden>Speicherort einrichten</button></p>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="demo" id="demoBar" hidden>
+    <span><strong>Beispieldaten.</strong> Namen und Termine sind erfunden und zeigen nur, wie ein gefülltes Buch aussieht.</span>
+    <button class="btn sm" data-act="clearDemo" id="btnClearDemo">Beispieldaten löschen</button>
+  </div>
+
+  <div class="demo alert still" id="storeBar" hidden><span id="storeBarTxt"></span></div>
+
+  <div class="demo alert" id="dataBar" hidden>
+    <span id="dataBarTxt"></span>
+    <span class="chips" id="dataBarBtns"></span>
+  </div>
+
+  <div class="demo" id="nameBar" hidden>
+    <span id="nameBarTxt"></span>
+    <button class="btn sm pri" data-act="conGrant" id="btnNameBar">Zugriff erlauben</button>
+  </div>
+
+  <main class="layout">
+    <div class="left">
+      <section class="overview" aria-label="Monatsübersicht">
+        <div class="bar">
+          <div class="nav">
+            <button class="btn sm" data-act="prev" id="btnPrev" aria-label="Einen Monat zurück">←</button>
+            <button class="btn sm" data-act="today" id="btnToday">Heute</button>
+            <button class="btn sm" data-act="next" id="btnNext" aria-label="Einen Monat weiter">→</button>
+            <span class="range" id="range"></span>
+          </div>
+          <div class="barR">
+            <button class="btn sm" data-act="undo" id="btnUndo" disabled title="Letzte Änderung zurücknehmen (Strg+Z)">↶ Rückgängig</button>
+            <label class="mc" for="sMonths">Monate
+              <select id="sMonths">
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+                <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+              </select></label>
+            <div class="seg" role="group" aria-label="Darstellung">
+              <button data-act="view" data-v="heat" id="vHeat">Auslastung</button>
+              <button data-act="view" data-v="pips" id="vPips">Zeitfenster</button>
+            </div>
+          </div>
+        </div>
+        <div class="legend" id="legend"></div>
+        <div class="months" id="months"></div>
+        <p class="note" id="zoomHint" hidden>Zum Vergrößern den Monat an der Ecke rechts unten mit der Maus aufziehen.</p>
+      </section>
+
+      <section class="tools">
+        <div class="tool">
+          <h3>Freien Termin finden</h3>
+          <div class="chips" id="chips"></div>
+          <label class="lab"><span class="note">Frühestens ab</span>
+            <input class="field" type="date" id="fromDate" style="max-width:190px"></label>
+          <ul class="hits" id="freeHits"></ul>
+        </div>
+        <div class="tool">
+          <h3>Termin eines Patienten suchen</h3>
+          <input class="field" type="search" id="q" placeholder="Name, Telefon oder Notiz" autocomplete="off">
+          <ul class="hits col" id="searchHits"></ul>
+        </div>
+        <div class="tool">
+          <h3>Tagesblätter speichern</h3>
+          <div class="row3">
+            <label class="wide">Von<input class="field" type="date" id="exFrom"></label>
+            <label class="wide">Bis<input class="field" type="date" id="exTo"></label>
+          </div>
+          <label class="lab"><span class="note">Format</span>
+            <select class="field" id="exFmt">
+              <option value="pdf">PDF</option>
+              <option value="docx">Word (.docx)</option>
+              <option value="odt">OpenDocument Text (.odt)</option>
+              <option value="xlsx">Excel (.xlsx)</option>
+              <option value="ods">OpenDocument Tabelle (.ods)</option>
+              <option value="txt">Text (.txt)</option>
+              <option value="md">Markdown (.md)</option>
+            </select></label>
+          <label class="check"><input type="checkbox" id="exFree"> Freie Zeiten mit ausgeben</label>
+          <div class="chips">
+            <button class="btn sm pri" data-act="exportSheets" id="btnExSheets">Speichern</button>
+            <button class="btn sm" data-act="exSel" id="btnExSel">Nur gewählter Tag</button>
+          </div>
+          <p class="note" id="exMsg" hidden></p>
+        </div>
+      </section>
+
+      <details class="set" id="setBox">
+        <summary>Öffnungszeiten, Termindauer und Sicherung</summary>
+        <div class="setgrid">
+          <div class="setcol">
+            <label class="lab">Sprache / Language
+              <select class="field" id="sLang"><option value="de">Deutsch</option><option value="en">English</option></select></label>
+            <label class="lab">Name im Kopf <input class="field" type="text" id="sTitle" maxlength="60"></label>
+            <label class="lab">Übliche Termindauer
+              <select class="field" id="sSlot">
+                <option value="5">5 Minuten</option><option value="10">10 Minuten</option><option value="15">15 Minuten</option><option value="20">20 Minuten</option>
+                <option value="30">30 Minuten</option><option value="45">45 Minuten</option><option value="60">60 Minuten</option>
+              </select></label>
+            <p class="note">In dieser Länge werden freie Zeiten angeboten. Beim Eintragen lässt sich die Dauer für jeden Termin ändern.</p>
+            <label class="check"><input type="checkbox" id="sHol"> Österreichische Feiertage automatisch sperren</label>
+          </div>
+          <div class="setcol">
+            <h3>Ordinationstage</h3>
+            <div class="hours" id="hours"></div>
+            <p class="warn" id="setMsg" hidden></p>
+          </div>
+          <div class="setcol">
+            <h3 id="dirHead">Speicherordner</h3>
+            <p class="note" id="dirNote"></p>
+            <div class="chips">
+              <button class="btn sm pri" data-act="dirPick" id="btnDirPick" hidden>Speicherordner wählen</button>
+              <button class="btn sm" data-act="dirUnlink" id="btnDirUnlink" hidden>Ordner trennen</button>
+              <button class="btn sm" data-act="dirOpen" id="btnDirOpen" hidden>Ordner öffnen</button>
+            </div>
+            <p class="note" id="dirMsg" hidden></p>
+            <h3 id="dataHead">Datendatei</h3>
+            <p class="note" id="dataNote"></p>
+            <div class="chips">
+              <button class="btn sm pri" data-act="dataNew" id="btnDataNew" hidden>Neue Datendatei anlegen</button>
+              <button class="btn sm" data-act="dataOpen" id="btnDataOpen" hidden>Vorhandene Datendatei öffnen</button>
+              <button class="btn sm pri" data-act="dataGrant" id="btnDataGrant" hidden>Zugriff erlauben</button>
+              <button class="btn sm" data-act="dataUnlink" id="btnDataUnlink" hidden>Verbindung trennen</button>
+            </div>
+            <h3>Sicherung</h3>
+            <p class="note" id="storeNote"></p>
+            <div class="chips">
+              <button class="btn sm" data-act="export" id="btnExport">Sicherung erstellen</button>
+              <label class="btn sm" for="impFile">Sicherung einlesen</label>
+              <input type="file" id="impFile" accept=".json,application/json" hidden>
+            </div>
+            <textarea class="field" id="bak" hidden aria-label="Sicherung als Text"></textarea>
+            <div class="chips" id="bakBtns" hidden>
+              <button class="btn sm" data-act="copy" id="btnCopy">Text kopieren</button>
+              <button class="btn sm" data-act="importPaste" id="btnPaste">Text einlesen</button>
+            </div>
+            <p class="note" id="bakMsg" hidden></p>
+          </div>
+          <div class="setcol">
+            <h3>Namensliste</h3>
+            <p class="note" id="conNote"></p>
+            <div class="chips">
+              <button class="btn sm" data-act="conExport" id="btnConExport">Namensliste speichern</button>
+              <label class="btn sm" for="conFile">Namensliste einlesen</label>
+              <input type="file" id="conFile" accept=".json,application/json" hidden>
+              <button class="btn sm" data-act="conClear" id="btnConClear">Liste leeren</button>
+            </div>
+            <p class="note" id="conMsg" hidden></p>
+            <details class="sub" id="conEdit">
+              <summary>Einträge einzeln löschen</summary>
+              <input class="field" type="search" id="conQ" placeholder="Liste durchsuchen" autocomplete="off" aria-label="Namensliste durchsuchen">
+              <ul class="conlist" id="conList"></ul>
+            </details>
+            <h3 id="nameFileHead">Namensdatei</h3>
+            <p class="note" id="conFileNote"></p>
+            <div class="chips">
+              <button class="btn sm" data-act="conLink" id="btnConLink" hidden>Namensdatei verbinden</button>
+              <button class="btn sm pri" data-act="conGrant" id="btnConGrant" hidden>Zugriff erlauben</button>
+              <button class="btn sm" data-act="conUnlink" id="btnConUnlink" hidden>Verbindung trennen</button>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <aside class="day" id="day" aria-live="polite"></aside>
+  </main>
+</div>
+<div class="tip" id="tip" hidden></div>
+<datalist id="dlNames"></datalist>
+<datalist id="dlNotes"></datalist>
+
+<script>
+(function(){
+'use strict';
+var KEY='terminbuch.v1';
+/* EXE: Die Seite läuft im Fenster des Python-Programms (terminbuch.py) und speichert über dessen Funktionen. */
+var EXE=/TerminbuchExe/.test(navigator.userAgent)||/[?&]exe=1(&|$)/.test(location.search)||(function(){try{return sessionStorage.getItem('terminbuch.exe')==='1'}catch(e){return false}})();
+var pyApi=null,exeInfo={},exeLoaded=false;
+/* Rückfall: Meldet sich das Programm, obwohl die Kennung fehlt, einmal neu laden und dann im Programm-Modus starten. */
+if(!EXE)window.addEventListener('pywebviewready',function(){try{sessionStorage.setItem('terminbuch.exe','1');location.reload()}catch(e){}});
+/* ---- Sprache: Deutsch ist die Grundsprache und zugleich der Schlüssel, die englischen Texte stehen in EN ---- */
+var AUTO=/^de/i.test(navigator.language||'de')?'de':'en';
+function lang(){return state&&(state.lang==='de'||state.lang==='en')?state.lang:AUTO}
+var NAMES={
+  de:{wd:['So','Mo','Di','Mi','Do','Fr','Sa'],wdl:['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],mon:['Jänner','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']},
+  en:{wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],wdl:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],mon:['January','February','March','April','May','June','July','August','September','October','November','December']}
+};
+var WD=NAMES.de.wd,WDL=NAMES.de.wdl,MON=NAMES.de.mon;
+var EN={
+/* Kopf und Leisten */
+'Ordinations-Terminbuch':'Appointment Book',
+'Terminbuch':'Appointment book',
+'Ordination':'Practice',
+'Speicherort einrichten':'Set up storage',
+'Beispieldaten.':'Sample data.',
+'Namen und Termine sind erfunden und zeigen nur, wie ein gefülltes Buch aussieht.':'Names and appointments are made up and only show what a filled book looks like.',
+'Beispieldaten löschen':'Delete sample data',
+'Zugriff erlauben':'Allow access',
+'Keine Ordinationstage festgelegt':'No opening days set',
+'übliche Termindauer {n} Minuten':'usual appointment duration {n} minutes',
+'Nächster freier Termin':'Next free appointment',
+'keiner':'none',
+'Frei in 4 Wochen':'Free within 4 weeks',
+'Termine ab heute':'Appointments from today',
+/* Monatsübersicht */
+'Monatsübersicht':'Month overview',
+'Einen Monat zurück':'One month back',
+'Heute':'Today',
+'Einen Monat weiter':'One month forward',
+'Letzte Änderung zurücknehmen (Strg+Z)':'Undo the last change (Ctrl+Z)',
+'↶ Rückgängig':'↶ Undo',
+'Rückgängig':'Undo',
+'Monate':'Months',
+'Darstellung':'View',
+'Auslastung':'Occupancy',
+'Zeitfenster':'Timeline',
+'Zum Vergrößern den Monat an der Ecke rechts unten mit der Maus aufziehen.':'To enlarge, drag the bottom right corner of the month with the mouse.',
+'Belegte Zeit je Tag:':'Booked time per day:',
+'leer':'empty',
+'bis ⅓':'up to ⅓',
+'bis ⅔':'up to ⅔',
+'über ⅔':'over ⅔',
+'voll':'full',
+'Öffnungszeit als Zeitleiste, zeilenweise von früh nach spät:':'Opening hours as a timeline, row by row from early to late:',
+'belegt':'booked',
+'frei':'free',
+'gesperrt':'closed',
+'heute':'today',
+'{n} frei':'{n} free',
+'zu':'closed',
+'Kalenderwoche':'Calendar week',
+'KW':'Wk',
+'Feiertag: {h}':'Public holiday: {h}',
+'keine Ordination':'closed',
+'{n} Termin':'{n} appointment',
+'{n} Termine':'{n} appointments',
+'{n} Termin eingetragen':'{n} appointment booked',
+'{n} Termine eingetragen':'{n} appointments booked',
+/* Tagesblatt */
+'Tag in der Übersicht wählen.':'Select a day in the overview.',
+'Tagesblatt':'Day sheet',
+'{n} frei zu {d} Min.':'{n} free × {d} min',
+'Für Termine gesperrt':'Closed for appointments',
+'Kein Ordinationstag':'Not an opening day',
+'An diesem Tag sind noch {n} Termine eingetragen.':'{n} appointments are still booked on this day.',
+'An diesem Tag ist noch 1 Termin eingetragen.':'1 appointment is still booked on this day.',
+'Zum Verschieben auf eine freie Zeit oder einen anderen Tag ziehen':'Drag onto a free time or another day to move',
+'Min.':'min',
+'Wirklich absagen':'Really remove',
+'Nein':'No',
+'Neuen Termin vor diesem einschieben':'Insert a new appointment before this one',
+'Neuen Termin vor {t} einschieben':'Insert a new appointment before {t}',
+'+ davor':'+ before',
+'Ändern':'Edit',
+'Absagen':'Remove',
+'frei · nur {n} Min.':'free · only {n} min',
+'Eintragen':'Book',
+'Keine Termine eingetragen.':'No appointments booked.',
+'Keine freie Zeit mehr an diesem Tag.':'No free time left on this day.',
+'Tag sperren':'Close day',
+'Zusatztag wieder schließen':'Close extra day again',
+'Tag wieder öffnen':'Reopen day',
+'Als Zusatztag öffnen':'Open as extra day',
+'Ziehen verschiebt einen Termin. Auf einem anderen Termin abgelegt, wird er davor eingeschoben.':'Dragging moves an appointment. Dropped on another appointment, it is inserted before it.',
+/* Terminformular */
+'Termin ändern · bisher {d}, {t}':'Edit appointment · currently {d}, {t}',
+'Neuer Termin':'New appointment',
+'Name':'Name',
+'Datum':'Date',
+'Beginn':'Start',
+'Dauer (Min.)':'Duration (min)',
+'Telefon':'Phone',
+'Notiz':'Note',
+'Zum Verschieben den neuen Tag in der Monatsübersicht anklicken oder das Datum eintippen.':'To move, click the new day in the month overview or type the date.',
+'Speichern':'Save',
+'Abbrechen':'Cancel',
+'von {a} bis {b} Uhr':'from {a} to {b}',
+'Feiertag ({h})':'public holiday ({h})',
+'Frei am {d}:':'Free on {d}:',
+'und {n} weitere':'and {n} more',
+'nichts mehr frei':'nothing free',
+'Bitte Datum und Beginn vollständig angeben.':'Please enter the date and start time completely.',
+'Bitte eine Dauer in Minuten angeben.':'Please enter a duration in minutes.',
+'Der Termin würde über Mitternacht hinausgehen.':'The appointment would run past midnight.',
+'Der Beginn liegt mitten im Termin {a}–{b} ({name}). Zum Einschieben den Beginn dieses Termins wählen, sonst eine freie Zeit.':'The start lies in the middle of the appointment {a}–{b} ({name}). To insert, choose the start of that appointment, otherwise a free time.',
+'Die folgenden Termine würden über Mitternacht hinausrücken.':'The following appointments would be pushed past midnight.',
+'Der Termin wird eingeschoben, dadurch rücken {n} Termine nach hinten: {list}':'The appointment is inserted, which pushes {n} appointments back: {list}',
+'Der Termin wird eingeschoben, dadurch rückt 1 Termin nach hinten: {list}':'The appointment is inserted, which pushes 1 appointment back: {list}',
+'Der Tag ist ein Feiertag ({h})':'The day is a public holiday ({h})',
+'An diesem Tag ist keine Ordination':'The practice is closed on this day',
+'Liegt außerhalb der Öffnungszeit {a}–{b}':'Lies outside the opening hours {a}–{b}',
+'Der letzte verschobene Termin endet um {end}, nach Ordinationsende um {close}':'The last moved appointment ends at {end}, after closing time at {close}',
+'Liegt in der Vergangenheit':'Lies in the past',
+'Zum Bestätigen noch einmal auf „{b}“ klicken.':'Click “{b}” again to confirm.',
+/* Verschieben mit der Maus */
+'{name} lässt sich nicht auf {t} legen: Die folgenden Termine würden über Mitternacht hinausrücken.':'{name} cannot be moved to {t}: the following appointments would be pushed past midnight.',
+'Schließen':'Close',
+'{name} dauert {dur} Min., ab {t} sind aber nur {avail} Min. frei. Beim Fortfahren rücken diese Termine nach hinten:':'{name} takes {dur} min, but only {avail} min are free from {t}. If you continue, these appointments are pushed back:',
+'{name} dauert {dur} Min., ab {t} sind aber nur {avail} Min. frei. Beim Fortfahren rückt dieser Termin nach hinten:':'{name} takes {dur} min, but only {avail} min are free from {t}. If you continue, this appointment is pushed back:',
+'{name} ({dur} Min.) wird um {t} eingeschoben. Dadurch rücken diese Termine nach hinten:':'{name} ({dur} min) is inserted at {t}. This pushes these appointments back:',
+'{name} ({dur} Min.) wird um {t} eingeschoben. Dadurch rückt dieser Termin nach hinten:':'{name} ({dur} min) is inserted at {t}. This pushes this appointment back:',
+'Der letzte verschobene Termin endet dann um {end}, nach Ordinationsende um {close}.':'The last moved appointment then ends at {end}, after closing time at {close}.',
+'{name} würde ab {t} bis {end} dauern, länger als die Öffnungszeit bis {close}.':'{name} would last from {t} to {end}, longer than the opening hours until {close}.',
+'Fortfahren':'Continue',
+/* Finden und Suchen */
+'Freien Termin finden':'Find a free appointment',
+'Frühestens ab':'Not before',
+'ab heute':'from today',
+'in 1 Monat':'in 1 month',
+'in 2 Monaten':'in 2 months',
+'in 3 Monaten':'in 3 months',
+'in 4 Monaten':'in 4 months',
+'in 6 Monaten':'in 6 months',
+'Kein freier Termin in den nächsten 18 Monaten ab diesem Datum.':'No free appointment within 18 months from this date.',
+'Termin eines Patienten suchen':'Find a patient’s appointment',
+'Name, Telefon oder Notiz':'Name, phone or note',
+'Ab zwei Buchstaben wird gesucht. Vergangene Termine stehen am Ende.':'The search starts at two letters. Past appointments are listed last.',
+'vergangen':'past',
+'{n} weitere Treffer. Suche eingrenzen.':'{n} more hits. Narrow the search.',
+'Kein Termin gefunden.':'No appointment found.',
+/* Tagesblätter speichern */
+'Tagesblätter speichern':'Save day sheets',
+'Von':'From',
+'Bis':'To',
+'Format':'Format',
+'PDF':'PDF',
+'Word (.docx)':'Word (.docx)',
+'OpenDocument Text (.odt)':'OpenDocument Text (.odt)',
+'Excel (.xlsx)':'Excel (.xlsx)',
+'OpenDocument Tabelle (.ods)':'OpenDocument Spreadsheet (.ods)',
+'Text (.txt)':'Text (.txt)',
+'Markdown (.md)':'Markdown (.md)',
+'Freie Zeiten mit ausgeben':'Include free times',
+'Nur gewählter Tag':'Selected day only',
+'Ende':'End',
+'Dauer':'Duration',
+'Wochentag':'Weekday',
+'Termine':'Appointments',
+'Tag':'Day',
+'geschlossen':'closed',
+'keine Termine':'no appointments',
+'Keine Termine.':'No appointments.',
+'Fortsetzung':'continued',
+'Seite {a} von {b}':'Page {a} of {b}',
+'Bitte einen gültigen Zeitraum wählen.':'Please choose a valid period.',
+'Der Zeitraum darf höchstens 400 Tage umfassen.':'The period may cover 400 days at most.',
+'In diesem Zeitraum gibt es keinen Ordinationstag.':'There is no opening day in this period.',
+'Terminbuch {n}':'Appointment book {n}',
+'Zeitraum {a} bis {b} · erstellt am {c}':'Period {a} to {b} · created on {c}',
+'tagesblaetter':'daysheets',
+'_bis_':'_to_',
+/* Einstellungen */
+'Öffnungszeiten, Termindauer und Sicherung':'Opening hours, appointment duration and backup',
+'Sprache / Language':'Sprache / Language',
+'Deutsch':'Deutsch',
+'English':'English',
+'Name im Kopf':'Name in header',
+'Übliche Termindauer':'Usual appointment duration',
+'5 Minuten':'5 minutes','10 Minuten':'10 minutes','15 Minuten':'15 minutes','20 Minuten':'20 minutes','30 Minuten':'30 minutes','45 Minuten':'45 minutes','60 Minuten':'60 minutes',
+'In dieser Länge werden freie Zeiten angeboten. Beim Eintragen lässt sich die Dauer für jeden Termin ändern.':'Free times are offered in this length. The duration can be changed for each appointment when booking.',
+'Österreichische Feiertage automatisch sperren':'Close Austrian public holidays automatically',
+'Ordinationstage':'Opening days',
+'von':'from',
+'bis':'to',
+'Das Ende muss nach dem Beginn liegen.':'The end must be after the start.',
+/* Feiertage */
+'Neujahr':'New Year’s Day',
+'Heilige Drei Könige':'Epiphany',
+'Staatsfeiertag':'Labour Day',
+'Mariä Himmelfahrt':'Assumption Day',
+'Nationalfeiertag':'National Day',
+'Allerheiligen':'All Saints’ Day',
+'Mariä Empfängnis':'Immaculate Conception',
+'Christtag':'Christmas Day',
+'Stefanitag':'St. Stephen’s Day',
+'Ostermontag':'Easter Monday',
+'Christi Himmelfahrt':'Ascension Day',
+'Pfingstmontag':'Whit Monday',
+'Fronleichnam':'Corpus Christi',
+/* Beispieldaten */
+'Kontrolle':'Check-up',
+'Befundbesprechung':'Results review',
+'Erstordination':'First visit',
+/* Speichern von Dateien */
+'Gespeichert als {f} im Download-Ordner des Browsers.':'Saved as {f} in the browser’s download folder.',
+'Speichern ist fehlgeschlagen.':'Saving failed.',
+'Wird gespeichert …':'Saving …',
+'Gespeichert: {f}':'Saved: {f}',
+'Gespeichert im Speicherordner {d}: {f}':'Saved in the storage folder {d}: {f}',
+'Im Speicherordner ließ sich nicht speichern.':'Could not save in the storage folder.',
+'In der lokalen Datei Terminbuch.html geht es.':'It works in the local file Terminbuch.html.',
+'Wird vorbereitet …':'Preparing …',
+'In dieser Ansicht lassen sich keine Dateien speichern.':'Files cannot be saved in this view.',
+'Nicht gespeichert.':'Not saved.',
+'Dieses Format lässt sich in dieser Ansicht nicht speichern.':'This format cannot be saved in this view.',
+'Speichern ist in dieser Ansicht nicht möglich.':'Saving is not possible in this view.',
+/* Sicherung */
+'Sicherung':'Backup',
+'Sicherung erstellen':'Create backup',
+'Sicherung einlesen':'Restore backup',
+'Sicherung als Text':'Backup as text',
+'Text kopieren':'Copy text',
+'Text einlesen':'Import text',
+'Eine Sicherung ist eine einzelne Datei mit dem ganzen Terminbuch zum Aufbewahren. Sie lässt sich hier oder auf einem anderen PC wieder einlesen.':'A backup is a single file with the whole appointment book for safekeeping. It can be restored here or on another PC.',
+'Dieser Browser erlaubt kein Speichern. Die Einträge gehen beim Schließen verloren; bitte eine Sicherung erstellen.':'This browser does not allow saving. The entries are lost when the page is closed; please create a backup.',
+'Sicherung eingelesen.':'Backup restored.',
+'Das ist keine gültige Terminbuch-Sicherung.':'This is not a valid appointment book backup.',
+'Text kopieren und als {f} ablegen.':'Copy the text and store it as {f}.',
+'In die Zwischenablage kopiert.':'Copied to the clipboard.',
+'Text ist markiert. Mit Strg+C kopieren.':'The text is selected. Copy it with Ctrl+C.',
+/* Namensliste und Namensdatei */
+'Namensliste':'Name list',
+'Namensliste speichern':'Save name list',
+'Namensliste einlesen':'Import name list',
+'Liste leeren':'Clear list',
+'Einträge einzeln löschen':'Delete single entries',
+'Liste durchsuchen':'Search the list',
+'Namensliste durchsuchen':'Search the name list',
+'{n} Name':'{n} name',
+'{n} Namen':'{n} names',
+'{n} Notizbegriff':'{n} note term',
+'{n} Notizbegriffe':'{n} note terms',
+'{a} und {b} gespeichert. Sie werden beim Eintragen vorgeschlagen und sind auch in der Sicherung enthalten.':'{a} and {b} saved. They are suggested when booking and are also included in the backup.',
+'Namen ({n})':'Names ({n})',
+'Nur die Telefonnummer löschen':'Delete the phone number only',
+'Telefonnummer von {n} löschen':'Delete the phone number of {n}',
+'{n} aus der Liste löschen':'Delete {n} from the list',
+'Löschen':'Delete',
+'{n} weitere Namen. Suche eingrenzen.':'{n} more names. Narrow the search.',
+'Notizbegriffe ({n})':'Note terms ({n})',
+'Notizbegriff {n} löschen':'Delete the note term {n}',
+'Nichts gefunden.':'Nothing found.',
+'Die Liste ist leer.':'The list is empty.',
+'Gelöscht. Mit „Rückgängig“ kommt der Eintrag zurück.':'Deleted. “Undo” brings the entry back.',
+'Namensliste geleert. Mit „Rückgängig“ kommt sie zurück.':'Name list cleared. “Undo” brings it back.',
+'{a} eingelesen.':'{a} imported.',
+'Das ist keine gültige Namensliste.':'This is not a valid name list.',
+'Namensdatei':'Name file',
+'Namensdatei verbinden':'Connect name file',
+'Verbindung trennen':'Disconnect',
+'Die Namensdatei ließ sich nicht schreiben.':'The name file could not be written.',
+'Die Namensdatei ließ sich nicht lesen.':'The name file could not be read.',
+'Die Namensdatei {f} ist verbunden. Der Browser verlangt für diese Sitzung noch die Erlaubnis zum Lesen und Schreiben.':'The name file {f} is connected. The browser still requires permission to read and write for this session.',
+'Automatisches Speichern in eine Datei geht nur mit Chrome oder Edge und der lokalen Datei Terminbuch.html.':'Automatic saving to a file only works with Chrome or Edge and the local file Terminbuch.html.',
+'Mit einer verbundenen Datei wird die Namensliste bei jeder Änderung von selbst gespeichert und beim Start eingelesen.':'With a connected file, the name list is saved automatically on every change and read at start-up.',
+'Verbunden mit {f}. Die Erlaubnis für diese Sitzung fehlt noch.':'Connected to {f}. Permission for this session is still missing.',
+'Verbunden mit {f}. Jede Änderung wird von selbst in die Datei geschrieben, beim Start wird sie eingelesen.':'Connected to {f}. Every change is written to the file automatically, and the file is read at start-up.',
+'Namensliste (JSON)':'Name list (JSON)',
+'Die gewählte Datei enthält keine Namensliste. Sie wurde nicht verändert.':'The chosen file does not contain a name list. It was not changed.',
+'Die Datei ließ sich nicht verbinden.':'The file could not be connected.',
+/* Datendatei */
+'Datendatei':'Data file',
+'Neue Datendatei anlegen':'Create new data file',
+'Vorhandene Datendatei öffnen':'Open existing data file',
+'{d} um {t}':'{d} at {t}',
+'Die Datei enthält keine gültigen Terminbuch-Daten mehr. Es wird nicht hineingeschrieben.':'The file no longer contains valid appointment book data. Nothing is written to it.',
+'Die Datei wurde nicht gefunden. Wurde sie verschoben oder gelöscht, bitte neu verbinden. Die Änderungen liegen im Browser.':'The file was not found. If it was moved or deleted, please connect it again. The changes are kept in the browser.',
+'Die Datei ließ sich nicht schreiben. Die letzten Änderungen sind noch nicht gespeichert.':'The file could not be written. The latest changes are not saved yet.',
+'Die Datei ließ sich nicht schreiben. Die Änderungen liegen im Browser und werden beim nächsten Speichern nachgetragen.':'The file could not be written. The changes are kept in the browser and are written on the next save.',
+'Eine Datendatei, in die jede Änderung von selbst geschrieben wird, gibt es nur mit Chrome oder Edge und der lokalen Datei Terminbuch.html. Hier liegen die Termine im Browser.':'A data file that receives every change automatically is only available with Chrome or Edge and the local file Terminbuch.html. Here the appointments are kept in the browser.',
+'Die Daten werden geladen …':'Loading the data …',
+'Keine Datendatei verbunden. Die Termine liegen nur in diesem Browser.':'No data file connected. The appointments are kept in this browser only.',
+'Datendatei {f}: {m}':'Data file {f}: {m}',
+'Die Erlaubnis für diese Sitzung fehlt noch.':'Permission for this session is still missing.',
+'Bis dahin wird nichts gespeichert.':'Until then nothing is saved.',
+'Bis dahin wird nur im Browser gespeichert.':'Until then changes are saved in the browser only.',
+'Datendatei {f}: abweichender Stand, das automatische Speichern ist angehalten.':'Data file {f}: different version, automatic saving is paused.',
+'Datendatei {f} · zuletzt gespeichert um {t}':'Data file {f} · last saved at {t}',
+'Datendatei {f} · auf dem aktuellen Stand':'Data file {f} · up to date',
+'Mit einer Datendatei wird das ganze Terminbuch nach jeder Änderung von selbst in eine Datei geschrieben und beim Start daraus gelesen. Die Datei kann auf dem PC oder auf einer Netzwerkfreigabe liegen.':'With a data file, the whole appointment book is written to a file automatically after every change and read from it at start-up. The file can be on the PC or on a network share.',
+'Die Datendatei {f} ist verbunden. Der Browser verlangt für diese Sitzung noch die Erlaubnis zum Lesen und Schreiben.':'The data file {f} is connected. The browser still requires permission to read and write for this session.',
+'Erneut versuchen':'Try again',
+'Anderen Ordner wählen':'Choose another folder',
+'Die Datendatei {f} im gewählten Ordner enthält bereits ein anderes Terminbuch.':'The data file {f} in the chosen folder already contains another appointment book.',
+'Die Datendatei {f} wurde von anderer Stelle geändert.':'The data file {f} was changed from somewhere else.',
+'Die Datendatei {f} enthält einen anderen Stand als dieser Browser.':'The data file {f} contains a different version than this browser.',
+'In der Datei stehen {a}, zuletzt geändert am {w}. Hier stehen {b}. Welcher Stand soll gelten?':'The file contains {a}, last changed on {w}. This window has {b}. Which version should apply?',
+'Stand aus der Datei laden':'Load the version from the file',
+'Datei mit dem Stand hier überschreiben':'Overwrite the file with the version here',
+'Die Datendatei enthält keine gültigen Terminbuch-Daten. Es wird nicht hineingeschrieben.':'The data file does not contain valid appointment book data. Nothing is written to it.',
+'Die Datei ließ sich nicht lesen. Liegt sie auf einem Laufwerk, das gerade nicht erreichbar ist?':'The file could not be read. Is it on a drive that is currently unreachable?',
+'Die gewählte Datei enthält kein Terminbuch. Sie wurde nicht verändert.':'The chosen file does not contain an appointment book. It was not changed.',
+'Terminbuch-Daten (JSON)':'Appointment book data (JSON)',
+'Die Datei ließ sich nicht schreiben.':'The file could not be written.',
+/* Speicherordner und Datenordner */
+'Speicherordner':'Storage folder',
+'Speicherordner wählen':'Choose storage folder',
+'Ordner trennen':'Disconnect folder',
+'Ordner öffnen':'Open folder',
+'Datenordner':'Data folder',
+'Zurück zum Programmordner':'Back to the program folder',
+'Datenordner: {d}. Dort liegen die Datendatei, die täglichen Sicherungskopien im Unterordner Sicherungen und alles, was hier gespeichert wird.':'Data folder: {d}. It holds the data file, the daily backup copies in the subfolder Sicherungen and everything that is saved here.',
+'Im Programmordner darf nicht geschrieben werden, die Daten liegen deshalb im Benutzerordner.':'The program folder is not writable, so the data is kept in the user folder.',
+'Einen festen Speicherordner gibt es nur mit Chrome oder Edge und der lokalen Datei Terminbuch.html. Hier landen gespeicherte Dateien im Download-Ordner des Browsers.':'A fixed storage folder is only available with Chrome or Edge and the local file Terminbuch.html. Here saved files go to the browser’s download folder.',
+'Speicherordner: {d}. Sicherung, Namensliste und Tagesblätter werden dort gespeichert, und die Dateidialoge öffnen sich dort.':'Storage folder: {d}. Backup, name list and day sheets are saved there, and the file dialogs open there.',
+'Ohne Speicherordner landen Sicherung, Namensliste und Tagesblätter im Download-Ordner des Browsers. Am besten den Ordner wählen, in dem die Terminbuch.html liegt{own}. Ist noch keine Datendatei verbunden, wird dort terminbuch-daten.json angelegt oder geöffnet.':'Without a storage folder, backup, name list and day sheets go to the browser’s download folder. It is best to choose the folder that contains Terminbuch.html{own}. If no data file is connected yet, terminbuch-daten.json is created or opened there.',
+'Der Ordner ließ sich nicht verbinden. Manche Ordner lässt der Browser nicht zu, ein eigener Unterordner geht.':'The folder could not be connected. The browser does not allow some folders; a subfolder of your own works.',
+'Der Ordner ließ sich nicht verwenden.':'The folder could not be used.',
+'Der Datenordner ist jetzt {d}. War dort noch kein Terminbuch, wurde der aktuelle Stand hineingeschrieben. Der bisherige Ordner bleibt unverändert.':'The data folder is now {d}. If it did not contain an appointment book yet, the current version was written to it. The previous folder remains unchanged.',
+'Die Wahl ließ sich nicht dauerhaft merken.':'The choice could not be remembered permanently.',
+'Der Ordner ließ sich nicht wählen.':'The folder could not be chosen.',
+'Der Ordner ließ sich nicht wechseln.':'The folder could not be changed.',
+'Der Datenordner ist wieder der Programmordner {d}.':'The data folder is the program folder {d} again.',
+'Die Verbindung zum Programm kam nicht zustande. Bitte das Terminbuch schließen und neu starten.':'The connection to the program could not be established. Please close the appointment book and start it again.',
+'Datenordner nicht erreichbar: {d}':'Data folder not reachable: {d}',
+'In diesem Ordner darf nicht geschrieben werden: {d}':'This folder is not writable: {d}',
+/* Browser-Speicher */
+'Der Browser kann nicht mehr speichern, sein Speicher ist voll oder gesperrt.':'The browser can no longer save; its storage is full or blocked.',
+'In die Datendatei wird weiter geschrieben.':'Changes are still written to the data file.',
+'Änderungen gehen beim Schließen der Seite verloren. Bitte sofort eine Sicherung erstellen oder eine Datendatei verbinden.':'Changes are lost when the page is closed. Please create a backup or connect a data file right away.'
+};
+var miss={};
+/* tr('Text {x}',{x:1}): liefert den deutschen Text oder seine englische Entsprechung und setzt die Platzhalter ein. */
+function tr(s,o){
+  var r=s;
+  if(lang()==='en'){if(has(EN,s))r=EN[s];else miss[s]=1}
+  if(o)r=r.replace(/\{(\w+)\}/g,function(m,k){return has(o,k)?o[k]:m});
+  return r;
+}
+/* Meldungen, die das Python-Programm auf Deutsch liefert */
+function pyMsg(s){
+  s=String(s||'');
+  var m=/^(Datenordner nicht erreichbar|In diesem Ordner darf nicht geschrieben werden): ([\s\S]*)$/.exec(s);
+  return m?tr(m[1]+': {d}',{d:m[2]}):tr(s);
+}
+/* Feste Texte der Seite: beim Start einsammeln, bei jedem Sprachwechsel neu setzen. Was das Programm inzwischen selbst überschrieben hat, bleibt unberührt. */
+var STATIC=[];
+(function(){
+  var root=document.querySelector('.app'),w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),n;
+  while((n=w.nextNode())){if(/[A-Za-zÄÖÜäöü]/.test(n.nodeValue))STATIC.push({n:n,de:n.nodeValue,cur:n.nodeValue})}
+  ['title','placeholder','aria-label'].forEach(function(a){
+    [].forEach.call(root.querySelectorAll('['+a+']'),function(el){STATIC.push({el:el,a:a,de:el.getAttribute(a),cur:el.getAttribute(a)})});
+  });
+})();
+function applyStatic(){
+  STATIC.forEach(function(x){
+    if(x.n){if(x.n.nodeValue!==x.cur)return;var m=/^(\s*)([\s\S]*?)(\s*)$/.exec(x.de);x.cur=m[1]+tr(m[2])+m[3];x.n.nodeValue=x.cur}
+    else{if(x.el.getAttribute(x.a)!==x.cur)return;x.cur=tr(x.de);x.el.setAttribute(x.a,x.cur)}
+  });
+  document.documentElement.lang=lang();document.title=tr('Ordinations-Terminbuch');
+}
+var curL='';
+/* Vor jeder Darstellung: Hat sich die Sprache geändert, Namen der Tage und Monate, feste Texte und Zustandszeilen nachziehen. */
+function syncLang(){
+  var l=lang();if(l===curL)return;
+  var first=!curL;curL=l;
+  WD=NAMES[l].wd;WDL=NAMES[l].wdl;MON=NAMES[l].mon;
+  applyStatic();
+  if(!first){dirStatus();dataStatus();nameStatus();storeStatus()}
+}
+function keepLang(lg){if(lg==='de'||lg==='en')state.lang=lg;else delete state.lang}
+/* Solange die Beispieldaten unverändert da sind, wechseln ihre Notizen und der Vorgabe-Name mit der Sprache. */
+var DEMOWORDS=['Kontrolle','Befundbesprechung','Erstordination','Ordination'];
+function demoLang(from,to){
+  if(!state.demo||from===to)return false;
+  var map={};DEMOWORDS.forEach(function(w){if(to==='en')map[w]=EN[w];else map[EN[w]]=w});
+  function sw(s){return has(map,s)?map[s]:s}
+  Object.keys(state.appts).forEach(function(ds){var day=state.appts[ds];Object.keys(day).forEach(function(k){if(day[k].note)day[k].note=sw(day[k].note)})});
+  var seen={};state.notes=state.notes.map(sw).filter(function(n){if(has(seen,n))return false;seen[n]=1;return true});
+  state.settings.title=sw(state.settings.title||'');
+  return true;
+}
+function setLang(l){
+  var old=lang();l=l==='en'?'en':'de';
+  captureForm();state.lang=l;
+  if(demoLang(old,l))save();else savePrefs();
+  renderSettings();render();
+}
+var ORDER=[1,2,3,4,5,6,0];
+
+function $(id){return document.getElementById(id)}
+function pad(n){return String(n).padStart(2,'0')}
+function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function parse(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
+function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)}
+function addMonths(d,n){var t=new Date(d.getFullYear(),d.getMonth()+n,1);var last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();return new Date(t.getFullYear(),t.getMonth(),Math.min(d.getDate(),last))}
+function toMin(t){var p=t.split(':').map(Number);return p[0]*60+p[1]}
+function fromMin(m){return pad(Math.floor(m/60))+':'+pad(m%60)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fmtDate(d){return curL==='en'?d.getDate()+' '+MON[d.getMonth()].slice(0,3)+' '+d.getFullYear():pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()}
+function fmtShort(ds){var d=parse(ds);return WD[d.getDay()]+' '+fmtDate(d)}
+function fmtLong(ds){var d=parse(ds);return WDL[d.getDay()]+', '+d.getDate()+(curL==='en'?' ':'. ')+MON[d.getMonth()]+' '+d.getFullYear()}
+function plural(n,one,many){return tr('{n} '+(n===1?one:many),{n:n})}
+
+/* ---- Feiertage Österreich ---- */
+var holCache={};
+function easter(y){var a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(y,mo-1,da)}
+function holidays(y){
+  if(holCache[y])return holCache[y];
+  var m={},e=easter(y);
+  function fix(mo,da,n){m[y+'-'+pad(mo)+'-'+pad(da)]=n}
+  fix(1,1,'Neujahr');fix(1,6,'Heilige Drei Könige');fix(5,1,'Staatsfeiertag');fix(8,15,'Mariä Himmelfahrt');
+  fix(10,26,'Nationalfeiertag');fix(11,1,'Allerheiligen');fix(12,8,'Mariä Empfängnis');fix(12,25,'Christtag');fix(12,26,'Stefanitag');
+  m[iso(addDays(e,1))]='Ostermontag';m[iso(addDays(e,39))]='Christi Himmelfahrt';m[iso(addDays(e,50))]='Pfingstmontag';m[iso(addDays(e,60))]='Fronleichnam';
+  return holCache[y]=m;
+}
+function holidayName(ds){var n=holidays(Number(ds.slice(0,4)))[ds]||'';return n?tr(n):''}
+
+/* ---- Zustand: appts[Datum][Beginn] = {dur, name, tel, note} ---- */
+function defaults(){return{v:2,demo:false,view:'heat',months:6,zoom:0,stamp:'',contacts:{},notes:[],
+  settings:{title:tr('Ordination'),slot:30,holidays:true,days:{'3':{from:'08:00',to:'13:00'},'5':{from:'08:00',to:'13:00'}}},
+  overrides:{},appts:{}}}
+function valid(o){return o&&typeof o==='object'&&o.settings&&typeof o.settings.days==='object'&&o.appts&&typeof o.appts==='object'}
+function migrate(o){
+  o.overrides=o.overrides||{};o.view=o.view||'heat';
+  o.months=Math.max(1,Math.min(12,Number(o.months)||6));
+  o.settings.slot=Number(o.settings.slot)||30;
+  Object.keys(o.appts).forEach(function(ds){var day=o.appts[ds];Object.keys(day).forEach(function(t){if(!(Number(day[t].dur)>0))day[t].dur=o.settings.slot})});
+  o.zoom=Number(o.zoom)||0;
+  if(!o.contacts||typeof o.contacts!=='object'||Array.isArray(o.contacts)){o.contacts={};o.notes=[];seedLists(o)}
+  if(!Array.isArray(o.notes))o.notes=[];
+  if(typeof o.stamp!=='string'||!o.stamp)o.stamp=newStamp();
+  if(o.lang!=='de'&&o.lang!=='en')delete o.lang;
+  o.v=2;return o;
+}
+function load(){try{var raw=localStorage.getItem(KEY);if(!raw)return null;var o=JSON.parse(raw);return valid(o)?migrate(o):null}catch(e){return null}}
+var storageOK=true;
+function newStamp(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)}
+function save(){state.stamp=newStamp();if(!EXE){try{localStorage.setItem(KEY,JSON.stringify(state));storageOK=true}catch(e){storageOK=false}}storeStatus();queueNames();queueData()}
+/* Ansicht, Monatszahl und Vergrößerung: merken, ohne den Datenstand als geändert zu kennzeichnen */
+function savePrefs(){
+  if(EXE){clearTimeout(dataT);dataT=setTimeout(function(){flushData(true)},400);return}
+  try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+}
+
+var now,todayStr,nowMin;
+function tick(){now=new Date();todayStr=iso(now);nowMin=now.getHours()*60+now.getMinutes()}
+tick();
+var state=EXE?null:load();
+syncLang();
+var ui={sel:null,editing:null,confirmDel:null,viewStart:new Date(now.getFullYear(),now.getMonth(),1),from:todayStr,chip:0,q:'',shown:null,pending:null,drag:null};
+
+function def(){return Number(state.settings.slot)||30}
+function hoursFor(wd){
+  var d=state.settings.days;
+  if(d[wd])return d[wd];
+  for(var i=0;i<ORDER.length;i++)if(d[ORDER[i]])return d[ORDER[i]];
+  return{from:'08:00',to:'13:00'};
+}
+function apptList(ds,excl){
+  var day=state.appts[ds]||{},out=[];
+  Object.keys(day).forEach(function(t){
+    if(excl&&excl.ds===ds&&excl.t===t)return;
+    var a=day[t],s=toMin(t),d=Number(a.dur)||def();out.push({t:t,s:s,e:s+d,a:a});
+  });
+  out.sort(function(x,y){return x.s-y.s});return out;
+}
+/* Freie Zeiten sind die Lücken zwischen den Terminen, zerlegt in Stücke der üblichen Termindauer. */
+function dayInfo(ds,excl){
+  var d=parse(ds),wd=d.getDay(),regular=!!state.settings.days[wd];
+  var hol=state.settings.holidays?holidayName(ds):'';
+  var defOpen=regular&&!hol,ov=state.overrides[ds],open=ov?ov==='open':defOpen;
+  var appts=apptList(ds,excl),h=hoursFor(wd),w={a:toMin(h.from),b:toMin(h.to),from:h.from,to:h.to};
+  var free=[],bookedMin=0,D=def();
+  if(open){
+    var cur=w.a;
+    var gap=function(a,b){for(var t=a;t<b;t+=D)free.push({s:t,e:Math.min(t+D,b),t:fromMin(t),full:t+D<=b})};
+    appts.forEach(function(x){
+      if(x.e<=w.a||x.s>=w.b)return;
+      if(x.s>cur)gap(cur,x.s);
+      cur=Math.max(cur,x.e);bookedMin+=Math.min(x.e,w.b)-Math.max(x.s,w.a);
+    });
+    if(cur<w.b)gap(cur,w.b);
+  }
+  var nFree=0;free.forEach(function(f){if(f.full)nFree++});
+  var lo=open?w.a:(appts.length?appts[0].s:0),hi=open?w.b:0;
+  appts.forEach(function(x){lo=Math.min(lo,x.s);hi=Math.max(hi,x.e)});
+  return{ds:ds,open:open,regular:regular,defOpen:defOpen,holiday:hol,w:w,appts:appts,free:free,nFree:nFree,nb:appts.length,
+    bookedMin:bookedMin,openMin:open?Math.max(0,w.b-w.a):0,lo:lo,hi:hi};
+}
+function level(i){
+  if(!i.open||!i.openMin)return 0;
+  if(i.nFree===0)return 4;
+  if(!i.nb)return 0;
+  var r=i.bookedMin/i.openMin;return r<=1/3?1:r<=2/3?2:3;
+}
+function isPast(ds,min){return ds<todayStr||(ds===todayStr&&min<=nowMin)}
+function nextFree(fromDs,limit){
+  var out=[],d=parse(fromDs<todayStr?todayStr:fromDs);
+  for(var i=0;i<540&&out.length<limit;i++,d=addDays(d,1)){
+    var ds=iso(d),info=dayInfo(ds);if(!info.open)continue;
+    for(var j=0;j<info.free.length&&out.length<limit;j++){var f=info.free[j];if(f.full&&!isPast(ds,f.s))out.push({ds:ds,t:f.t})}
+  }
+  return out;
+}
+function tipText(info){
+  var s=fmtShort(info.ds)+' · ';
+  if(info.open)return s+info.w.from+'–'+info.w.to+' · '+plural(info.nb,'Termin','Termine')+', '+(info.nFree?tr('{n} frei',{n:info.nFree}):tr('voll'));
+  s+=info.holiday?tr('Feiertag: {h}',{h:info.holiday}):info.regular?tr('gesperrt'):tr('keine Ordination');
+  if(info.nb)s+=' · '+tr(info.nb===1?'{n} Termin eingetragen':'{n} Termine eingetragen',{n:info.nb});
+  return s;
+}
+/* Zeitleiste als Farbverlauf: belegte Abschnitte maßstäblich zwischen lo und hi. */
+function grad(appts,lo,hi,gapPx){
+  var span=hi-lo,stops=[],cur='0%',F='var(--tl-free)',B='var(--accent)',G='var(--surface)';
+  if(span<=0)return'none';
+  appts.forEach(function(x,i){
+    var a=Math.max(x.s,lo),b=Math.min(x.e,hi);if(b<=a)return;
+    var pa=((a-lo)/span*100).toFixed(2)+'%',pb=((b-lo)/span*100).toFixed(2)+'%';
+    var touch=appts[i+1]&&appts[i+1].s<=x.e&&b<hi;
+    stops.push(F+' '+cur+' '+pa);
+    if(touch){var pg='calc('+pb+' - '+gapPx+'px)';stops.push(B+' '+pa+' '+pg,G+' '+pg+' '+pb)}
+    else stops.push(B+' '+pa+' '+pb);
+    cur=pb;
+  });
+  stops.push(F+' '+cur+' 100%');
+  return'linear-gradient(90deg,'+stops.join(',')+')';
+}
+
+/* ---- Kalenderwoche, Rückgängig, Namensliste ---- */
+function isoWeek(d){var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())),dn=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-dn);var y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y0)/864e5+1)/7)}
+var undo=[];
+function snap(){undo.push(JSON.stringify(state));if(undo.length>30)undo.shift()}
+function doUndo(){
+  if(!undo.length)return;
+  var v=state.view,m=state.months,z=state.zoom,lg=state.lang;
+  state=JSON.parse(undo.pop());state.view=v;state.months=m;state.zoom=z;keepLang(lg);
+  ui.editing=null;ui.confirmDel=null;ui.pending=null;save();renderSettings();render();
+}
+function has(o,k){return Object.prototype.hasOwnProperty.call(o,k)}
+function remember(o,name,tel,note){
+  if(name&&name!=='__proto__'){if(!has(o.contacts,name)||tel)o.contacts[name]=tel||o.contacts[name]||''}
+  if(note&&o.notes.indexOf(note)<0)o.notes.push(note);
+}
+function seedLists(o){Object.keys(o.appts).forEach(function(ds){var day=o.appts[ds];Object.keys(day).forEach(function(t){remember(o,(day[t].name||'').trim(),(day[t].tel||'').trim(),(day[t].note||'').trim())})})}
+function renderLists(){
+  var names=Object.keys(state.contacts).sort(function(a,b){return a.localeCompare(b,lang())});
+  $('dlNames').innerHTML=names.map(function(n){return'<option value="'+esc(n)+'"'+(state.contacts[n]?' label="'+esc(state.contacts[n])+'"':'')+'></option>'}).join('');
+  $('dlNotes').innerHTML=state.notes.slice().sort(function(a,b){return a.localeCompare(b,lang())}).map(function(n){return'<option value="'+esc(n)+'"></option>'}).join('');
+  $('conNote').textContent=tr('{a} und {b} gespeichert. Sie werden beim Eintragen vorgeschlagen und sind auch in der Sicherung enthalten.',{a:plural(names.length,'Name','Namen'),b:plural(state.notes.length,'Notizbegriff','Notizbegriffe')});
+  var q=($('conQ').value||'').trim().toLowerCase(),li='',shown=0,MAX=300;
+  function hit(a,b){return!q||(a+' '+(b||'')).toLowerCase().indexOf(q)>=0}
+  var nl=names.filter(function(n){return hit(n,state.contacts[n])}),tl=state.notes.slice().sort(function(a,b){return a.localeCompare(b,lang())}).filter(function(n){return hit(n)});
+  li+='<li class="sep">'+tr('Namen ({n})',{n:nl.length})+'</li>';
+  nl.slice(0,MAX).forEach(function(n){
+    var tel=state.contacts[n];
+    li+='<li><span class="nm">'+esc(n)+'</span>'+(tel?'<button class="btn sm quiet" data-act="telDel" data-n="'+esc(n)+'" title="'+tr('Nur die Telefonnummer löschen')+'" aria-label="'+tr('Telefonnummer von {n} löschen',{n:esc(n)})+'">'+esc(tel)+' ×</button>':'')+
+      '<button class="btn sm quiet" data-act="conDel" data-n="'+esc(n)+'" aria-label="'+tr('{n} aus der Liste löschen',{n:esc(n)})+'">'+tr('Löschen')+'</button></li>';
+  });
+  if(nl.length>MAX)li+='<li class="none">'+tr('{n} weitere Namen. Suche eingrenzen.',{n:nl.length-MAX})+'</li>';
+  li+='<li class="sep">'+tr('Notizbegriffe ({n})',{n:tl.length})+'</li>';
+  tl.slice(0,MAX).forEach(function(n){li+='<li><span class="nm">'+esc(n)+'</span><button class="btn sm quiet" data-act="noteDel" data-n="'+esc(n)+'" aria-label="'+tr('Notizbegriff {n} löschen',{n:esc(n)})+'">'+tr('Löschen')+'</button></li>'});
+  if(!nl.length&&!tl.length)li='<li class="none">'+(q?tr('Nichts gefunden.'):tr('Die Liste ist leer.'))+'</li>';
+  $('conList').innerHTML=li;
+}
+
+/* ---- Termin mit der Maus verschieben ---- */
+/* Was geschieht, wenn ab s ein Termin der Länge dur eingesetzt wird: Folgende Termine rücken nur so weit wie nötig. */
+function planInsert(ds,excl,s,dur){
+  var info=dayInfo(ds,excl),cur=s+dur,shifts=[],avail=null,stop=false,inside=null;
+  info.appts.forEach(function(x){
+    if(stop||x.e<=s)return;
+    if(x.s<s){inside=x;stop=true;return}
+    if(avail===null)avail=x.s-s;
+    if(x.s<cur){shifts.push({t:x.t,nt:cur,name:x.a.name,by:cur-x.s});cur+=x.e-x.s}else stop=true;
+  });
+  if(avail===null)avail=Math.max(0,info.w.b-s);
+  var late=cur>1440;if(!late)shifts.forEach(function(x){x.nt=fromMin(x.nt)});
+  return{info:info,shifts:shifts,avail:avail,end:cur,inside:inside,late:late,over:info.open&&cur>info.w.b};
+}
+function planMove(ds,t,newT){
+  var a=(state.appts[ds]||{})[t];if(!a||t===newT)return;
+  var dur=Number(a.dur)||def(),pl=planInsert(ds,{ds:ds,t:t},toMin(newT),dur);
+  var p={ds:ds,t:t,newT:newT,dur:dur,name:a.name,shifts:pl.shifts,avail:pl.avail,end:pl.end,close:pl.info.w.to,over:pl.over,late:pl.late};
+  if(!p.shifts.length&&!p.over&&!p.late){applyMove(p);return}
+  ui.pending=p;ui.editing=null;ui.confirmDel=null;
+}
+function applyMove(p){
+  var day=state.appts[p.ds];if(!day||!day[p.t])return;
+  snap();
+  var moved=day[p.t],rest=p.shifts.map(function(x){return{nt:x.nt,a:day[x.t]}});
+  delete day[p.t];p.shifts.forEach(function(x){delete day[x.t]});
+  day[p.newT]=moved;rest.forEach(function(x){day[x.nt]=x.a});
+  ui.pending=null;save();
+}
+function pendingHTML(){
+  var p=ui.pending;if(!p||p.ds!==ui.sel)return'';
+  var h='<div class="confirm" role="alert">',nm='<strong>'+esc(p.name)+'</strong>',many=p.shifts.length>1;
+  if(p.late)return h+'<p>'+tr('{name} lässt sich nicht auf {t} legen: Die folgenden Termine würden über Mitternacht hinausrücken.',{name:nm,t:p.newT})+'</p><div class="row"><button class="btn sm" data-act="cancel">'+tr('Schließen')+'</button></div></div>';
+  if(p.shifts.length){
+    h+='<p>'+(p.avail>0
+      ?tr(many?'{name} dauert {dur} Min., ab {t} sind aber nur {avail} Min. frei. Beim Fortfahren rücken diese Termine nach hinten:':'{name} dauert {dur} Min., ab {t} sind aber nur {avail} Min. frei. Beim Fortfahren rückt dieser Termin nach hinten:',{name:nm,dur:p.dur,t:p.newT,avail:p.avail})
+      :tr(many?'{name} ({dur} Min.) wird um {t} eingeschoben. Dadurch rücken diese Termine nach hinten:':'{name} ({dur} Min.) wird um {t} eingeschoben. Dadurch rückt dieser Termin nach hinten:',{name:nm,dur:p.dur,t:p.newT}))+'</p><ul>'+
+      p.shifts.map(function(x){return'<li>'+x.t+' → '+x.nt+' · '+esc(x.name)+' (+'+x.by+' '+tr('Min.')+')</li>'}).join('')+'</ul>';
+    if(p.over)h+='<p class="warn">'+tr('Der letzte verschobene Termin endet dann um {end}, nach Ordinationsende um {close}.',{end:fromMin(p.end),close:p.close})+'</p>';
+  }else h+='<p>'+tr('{name} würde ab {t} bis {end} dauern, länger als die Öffnungszeit bis {close}.',{name:nm,t:p.newT,end:fromMin(p.end),close:p.close})+'</p>';
+  return h+'<div class="row"><button class="btn pri sm" data-act="moveOk" id="mvOk">'+tr('Fortfahren')+'</button><button class="btn sm" data-act="cancel" id="mvNo">'+tr('Abbrechen')+'</button></div></div>';
+}
+
+/* ---- Beispieldaten ---- */
+function makeDemo(){
+  var s=defaults();s.demo=true;state=s;
+  var names=['Gruber M.','Huber A.','Bauer K.','Wagner E.','Pichler J.','Steiner H.','Moser R.','Mayer S.','Hofer T.','Leitner B.','Berger F.','Fuchs I.','Eder W.','Fischer L.','Schmid G.','Winkler P.','Weber C.','Schwarz D.','Maier N.','Reiter O.','Lang U.','Baumgartner V.','Auer Z.','Brunner E.','Wolf H.','Aigner M.','Binder K.','Ebner J.','Koller A.','Lehner S.'];
+  var notes=['','','',tr('Kontrolle'),tr('Kontrolle'),tr('Befundbesprechung'),tr('Erstordination')];
+  var seed=20261008;function rnd(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}
+  for(var i=-21;i<200;i++){
+    var d=addDays(now,i),ds=iso(d),info=dayInfo(ds);if(!info.open)continue;
+    var w=i/7,p=w<14?0.94:w<17?0.62:w<20?0.3:w<24?0.12:0.04,cur=info.w.a;
+    while(cur+15<=info.w.b){
+      if(rnd()<p){
+        var r=rnd(),du=r<0.82?30:r<0.94?15:45;if(cur+du>info.w.b)du=info.w.b-cur;
+        (s.appts[ds]=s.appts[ds]||{})[fromMin(cur)]={dur:du,name:names[Math.floor(rnd()*names.length)],tel:'',note:notes[Math.floor(rnd()*notes.length)]};
+        cur+=du;
+      }else cur+=30;
+    }
+  }
+  seedLists(s);return s;
+}
+if(!state)state=EXE?defaults():makeDemo();
+
+/* ---- Darstellung ---- */
+function renderHead(){
+  var st=state.settings;
+  $('ttl').textContent=st.title||tr('Ordination');
+  var parts=ORDER.filter(function(w){return st.days[w]}).map(function(w){return WDL[w]+' '+st.days[w].from+'–'+st.days[w].to});
+  $('hoursLine').textContent=(parts.length?parts.join(' · '):tr('Keine Ordinationstage festgelegt'))+' · '+tr('übliche Termindauer {n} Minuten',{n:st.slot});
+  $('demoBar').hidden=!state.demo;
+  var nf=nextFree(todayStr,1)[0],free4=0,upcoming=0;
+  for(var i=0;i<28;i++){var ds=iso(addDays(now,i)),inf=dayInfo(ds);if(!inf.open)continue;inf.free.forEach(function(f){if(f.full&&!isPast(ds,f.s))free4++})}
+  Object.keys(state.appts).forEach(function(ds){if(ds>=todayStr)upcoming+=Object.keys(state.appts[ds]).length});
+  $('stats').innerHTML=
+    '<div class="stat"><span class="eyebrow">'+tr('Nächster freier Termin')+'</span>'+(nf?'<button class="v" data-act="jump" data-d="'+nf.ds+'" data-t="'+nf.t+'">'+fmtShort(nf.ds)+', '+nf.t+'</button>':'<span class="v">'+tr('keiner')+'</span>')+'</div>'+
+    '<div class="stat"><span class="eyebrow">'+tr('Frei in 4 Wochen')+'</span><span class="v">'+free4+'</span></div>'+
+    '<div class="stat"><span class="eyebrow">'+tr('Termine ab heute')+'</span><span class="v">'+upcoming+'</span></div>';
+}
+function renderLegend(){
+  var h='';
+  if(state.view==='heat'){
+    h+='<span>'+tr('Belegte Zeit je Tag:')+'</span>';
+    [['leer','var(--surface)','var(--line-strong)'],['bis ⅓','var(--h1)',''],['bis ⅔','var(--h2)',''],['über ⅔','var(--h3)',''],['voll','var(--h4)','']].forEach(function(k){
+      h+='<span class="k"><i style="background:'+k[1]+(k[2]?';border-color:'+k[2]:'')+'"></i>'+tr(k[0])+'</span>'});
+  }else{
+    h+='<span>'+tr('Öffnungszeit als Zeitleiste, zeilenweise von früh nach spät:')+'</span><span class="k"><i style="background:var(--accent);height:7px"></i>'+tr('belegt')+'</span><span class="k"><i style="background:var(--tl-free);height:7px"></i>'+tr('frei')+'</span>';
+  }
+  h+='<span class="k"><i style="background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line) 4px 5.5px);border-color:var(--line)"></i>'+tr('gesperrt')+'</span>';
+  h+='<span class="k"><i style="background:var(--today);border-radius:50%;width:9px;height:9px"></i>'+tr('heute')+'</span>';
+  $('legend').innerHTML=h;
+  $('vHeat').setAttribute('aria-pressed',state.view==='heat');$('vPips').setAttribute('aria-pressed',state.view==='pips');
+  $('sMonths').value=String(state.months);
+  $('btnUndo').disabled=!undo.length;$('btnUndo').textContent='↶ '+tr('Rückgängig')+(undo.length?' ('+undo.length+')':'');
+}
+var zoomRO=null,zoomT=0;
+function cellHTML(d){
+  var ds=iso(d),info=dayInfo(ds),cls=['c'],inner='<span class="n">'+d.getDate()+'</span>';
+  if(info.open){
+    if(state.view==='pips'){
+      cls.push('pp');
+      var span=info.hi-info.lo,R=Math.max(1,Math.min(4,Math.round(span/100))),len=span/R,rows='';
+      for(var i=0;i<R;i++)rows+='<i style="background:'+grad(info.appts,info.lo+i*len,info.lo+(i+1)*len,1)+'"></i>';
+      inner+='<span class="tl">'+rows+'</span>';
+    }else{cls.push('lv'+level(info));inner+='<span class="f">'+(info.nFree===0?tr('voll'):tr('{n} frei',{n:info.nFree}))+'</span>'}
+  }else if(info.regular||info.nb){cls.push('shut');inner+='<span class="f">'+tr('zu')+'</span>'}
+  if(ds<todayStr)cls.push('past');
+  if(ds===todayStr)cls.push('today');
+  if(ui.editing&&ui.editing.mode==='edit'&&ui.editing.target===ds&&ds!==ui.sel)cls.push('target');
+  var tt=esc(tipText(info));
+  return'<button class="'+cls.join(' ')+'" data-act="sel" data-d="'+ds+'" aria-pressed="'+(ds===ui.sel)+'" aria-label="'+tt+'" data-tip="'+tt+'">'+inner+'</button>';
+}
+function renderMonths(){
+  var h='',st=state.settings,N=state.months;
+  for(var m=0;m<N;m++){
+    var first=new Date(ui.viewStart.getFullYear(),ui.viewStart.getMonth()+m,1),y=first.getFullYear(),mo=first.getMonth();
+    var days=new Date(y,mo+1,0).getDate(),off=(first.getDay()+6)%7,cells='<span class="kw">'+isoWeek(first)+'</span>',free=0,any=false;
+    for(var i=0;i<off;i++)cells+='<span></span>';
+    for(var dd=1;dd<=days;dd++){
+      var d=new Date(y,mo,dd),ds=iso(d),inf=dayInfo(ds);
+      if(dd>1&&(off+dd-1)%7===0)cells+='<span class="kw">'+isoWeek(d)+'</span>';
+      if(inf.open&&ds>=todayStr){any=true;inf.free.forEach(function(f){if(f.full&&!isPast(ds,f.s))free++})}
+      cells+=cellHTML(d);
+    }
+    h+='<div class="month"'+(N===1?' style="width:'+(state.zoom||460)+'px"':'')+'><div class="mhead"><h3>'+MON[mo]+' '+y+'</h3><span>'+(any?tr('{n} frei',{n:free}):'')+'</span></div><div class="grid">'+
+      '<span class="wd kwh" title="'+tr('Kalenderwoche')+'">'+tr('KW')+'</span>'+ORDER.map(function(w){return'<span class="wd'+(st.days[w]?' on':'')+'">'+WD[w]+'</span>'}).join('')+cells+'</div></div>';
+  }
+  $('months').innerHTML=h;
+  $('months').classList.toggle('single',N===1);$('zoomHint').hidden=N!==1;
+  if(zoomRO){zoomRO.disconnect();zoomRO=null}
+  if(N===1&&window.ResizeObserver){
+    var mEl=$('months').firstElementChild;
+    zoomRO=new ResizeObserver(function(){var w=mEl.offsetWidth;if(w>0&&Math.abs(w-(state.zoom||460))>2){state.zoom=w;clearTimeout(zoomT);zoomT=setTimeout(savePrefs,300)}});
+    zoomRO.observe(mEl);
+  }
+  var a=ui.viewStart,b=new Date(a.getFullYear(),a.getMonth()+N-1,1);
+  $('range').textContent=MON[a.getMonth()]+' '+a.getFullYear()+(N>1?' – '+MON[b.getMonth()]+' '+b.getFullYear():'');
+}
+function formHTML(){
+  var ed=ui.editing,v=ed.vals,edit=ed.mode==='edit';
+  return'<li class="slot edit"><form class="entry" id="slotForm">'+
+    '<p class="eyebrow">'+(edit?tr('Termin ändern · bisher {d}, {t}',{d:fmtShort(ed.ds),t:ed.t}):tr('Neuer Termin'))+'</p>'+
+    '<input class="field" id="fName" list="dlNames" placeholder="'+tr('Name')+'" value="'+esc(v.name)+'" maxlength="80" required autocomplete="off" aria-label="'+tr('Name')+'">'+
+    '<div class="row3">'+
+      '<label class="wide">'+tr('Datum')+'<input class="field" type="date" id="fDate" value="'+esc(v.date)+'" required></label>'+
+      '<label>'+tr('Beginn')+'<input class="field" type="time" id="fStart" step="300" value="'+esc(v.start)+'" required></label>'+
+      '<label>'+tr('Dauer (Min.)')+'<input class="field" type="number" id="fDur" min="5" max="600" step="5" value="'+esc(v.dur)+'" required></label>'+
+    '</div>'+
+    '<p class="note" id="fEnd"></p>'+
+    '<div class="row"><input class="field" id="fTel" placeholder="'+tr('Telefon')+'" value="'+esc(v.tel)+'" maxlength="40" inputmode="tel" autocomplete="off" aria-label="'+tr('Telefon')+'">'+
+    '<input class="field" id="fNote" list="dlNotes" placeholder="'+tr('Notiz')+'" value="'+esc(v.note)+'" maxlength="120" autocomplete="off" aria-label="'+tr('Notiz')+'"></div>'+
+    (edit?'<p class="note">'+tr('Zum Verschieben den neuen Tag in der Monatsübersicht anklicken oder das Datum eintippen.')+'</p>':'')+
+    '<div class="freechips" id="fFree"></div>'+
+    '<p class="warn" id="fMsg" hidden></p>'+
+    '<div class="row"><button class="btn pri sm" type="submit" id="fSave">'+(edit?tr('Speichern'):tr('Eintragen'))+'</button><button class="btn sm" type="button" data-act="cancel" id="fCancel">'+tr('Abbrechen')+'</button></div>'+
+    '</form></li>';
+}
+function updateFormAux(){
+  if(!$('slotForm')||!ui.editing)return;
+  var ed=ui.editing,ds=$('fDate').value,st=($('fStart').value||'').slice(0,5),du=Number($('fDur').value);
+  var end=st&&du>0?toMin(st)+du:-1;
+  $('fEnd').textContent=end>0&&end<=1440?tr('von {a} bis {b} Uhr',{a:st,b:end===1440?'24:00':fromMin(end)}):'';
+  var box=$('fFree');if(!ds){box.innerHTML='';return}
+  var info=dayInfo(ds,ed.mode==='edit'?{ds:ed.ds,t:ed.t}:null),h;
+  if(!info.open)h='<span class="note">'+fmtShort(ds)+': '+(info.holiday?tr('Feiertag ({h})',{h:esc(info.holiday)}):tr('keine Ordination'))+'</span>';
+  else{
+    var list=info.free.filter(function(f){return!isPast(ds,f.s)});
+    h='<span class="note">'+tr('Frei am {d}:',{d:fmtShort(ds)})+'</span>'+(list.length
+      ?list.slice(0,18).map(function(f){return'<button type="button" class="btn sm" data-act="pick" data-t="'+f.t+'">'+f.t+(f.full?'':' · '+(f.e-f.s)+' '+tr('Min.'))+'</button>'}).join('')+(list.length>18?'<span class="note">'+tr('und {n} weitere',{n:list.length-18})+'</span>':'')
+      :'<span class="note">'+tr('nichts mehr frei')+'</span>');
+  }
+  box.innerHTML=h;
+}
+function captureForm(){
+  if(!ui.editing||!$('slotForm'))return;
+  ui.editing.vals={name:$('fName').value,tel:$('fTel').value,note:$('fNote').value,date:$('fDate').value,start:($('fStart').value||'').slice(0,5),dur:$('fDur').value};
+}
+function renderDay(){
+  var el=$('day');if(!ui.sel){el.innerHTML='<p class="note">'+tr('Tag in der Übersicht wählen.')+'</p>';return}
+  var old=el.querySelector('.slots'),keep=old&&ui.shown===ui.sel?old.scrollTop:0;ui.shown=ui.sel;
+  var info=dayInfo(ui.sel),past=ui.sel<todayStr,ed=ui.editing,placed=false;
+  var h='<div><p class="eyebrow">'+tr('Tagesblatt')+(ui.sel===todayStr?' · '+tr('heute'):'')+'</p><h2>'+fmtLong(ui.sel)+'</h2></div>';
+  if(info.open){
+    h+='<p class="occ">'+plural(info.nb,'Termin','Termine')+' · '+(info.nFree?tr('{n} frei zu {d} Min.',{n:info.nFree,d:def()}):tr('voll'))+'</p>';
+    h+='<div aria-hidden="true"><div class="strip" style="background:'+grad(info.appts,info.lo,info.hi,2)+'"></div><div class="scale"><span>'+fromMin(info.lo)+'</span><span>'+fromMin(info.hi)+'</span></div></div>';
+  }else{
+    h+='<p class="occ">'+(info.holiday?tr('Feiertag: {h}',{h:esc(info.holiday)}):info.regular?tr('Für Termine gesperrt'):tr('Kein Ordinationstag'))+'</p>';
+    if(info.nb)h+='<p class="warn">'+tr(info.nb>1?'An diesem Tag sind noch {n} Termine eingetragen.':'An diesem Tag ist noch 1 Termin eingetragen.',{n:info.nb})+'</p>';
+  }
+  h+=pendingHTML();
+  var rows=info.appts.map(function(x){return{k:'a',s:x.s,x:x}}).concat(info.free.filter(function(f){return!isPast(ui.sel,f.s)}).map(function(f){return{k:'f',s:f.s,f:f}}));
+  rows.sort(function(p,q){return p.s-q.s});
+  var li='';
+  rows.forEach(function(r){
+    if(r.k==='a'){
+      var x=r.x,a=x.a;
+      if(ed&&ed.mode==='edit'&&ed.ds===ui.sel&&ed.t===x.t){li+=formHTML();placed=true;return}
+      if(ed&&ed.mode==='new'&&ed.ds===ui.sel&&ed.before===x.t){li+=formHTML();placed=true}
+      var sub=[a.tel,a.note].filter(Boolean).map(esc).join(' · ');
+      li+='<li class="slot"'+(past?'':' draggable="true" data-drag="'+x.t+'" title="'+tr('Zum Verschieben auf eine freie Zeit oder einen anderen Tag ziehen')+'"')+'><div class="tm"><time>'+x.t+'</time><small>'+(x.e-x.s)+' '+tr('Min.')+'</small></div><div class="who"><strong>'+esc(a.name)+'</strong>'+(sub?'<span>'+sub+'</span>':'')+'</div><div class="act">'+
+        (ui.confirmDel===x.t
+          ?'<button class="btn sm danger" data-act="del" data-t="'+x.t+'">'+tr('Wirklich absagen')+'</button><button class="btn sm quiet" data-act="cancel">'+tr('Nein')+'</button>'
+          :(past?'':'<button class="btn sm quiet" data-act="insert" data-t="'+x.t+'" title="'+tr('Neuen Termin vor diesem einschieben')+'" aria-label="'+tr('Neuen Termin vor {t} einschieben',{t:x.t})+'">'+tr('+ davor')+'</button>')+'<button class="btn sm quiet" data-act="edit" data-t="'+x.t+'">'+tr('Ändern')+'</button><button class="btn sm quiet" data-act="del" data-t="'+x.t+'">'+tr('Absagen')+'</button>')+
+        '</div></li>';
+    }else{
+      var f=r.f;
+      if(ed&&ed.mode==='new'&&ed.ds===ui.sel&&ed.t0===f.t){li+=formHTML();placed=true;return}
+      li+='<li class="slot"><div class="tm"><time>'+f.t+'</time></div><button class="free" data-act="book" data-t="'+f.t+'" data-len="'+(f.e-f.s)+'"><span>'+(f.full?tr('frei'):tr('frei · nur {n} Min.',{n:f.e-f.s}))+'</span><b>'+tr('Eintragen')+'</b></button></li>';
+    }
+  });
+  if(ed&&!placed)li=formHTML()+li;
+  if(li)h+='<ol class="slots">'+li+'</ol>';
+  else if(info.open||past)h+='<p class="note">'+(past?tr('Keine Termine eingetragen.'):tr('Keine freie Zeit mehr an diesem Tag.'))+'</p>';
+  if(!past){
+    var lbl=tr(info.open?(info.defOpen?'Tag sperren':'Zusatztag wieder schließen'):(info.defOpen?'Tag wieder öffnen':'Als Zusatztag öffnen'));
+    h+='<div class="dayfoot"><span class="note">'+(info.nb?tr('Ziehen verschiebt einen Termin. Auf einem anderen Termin abgelegt, wird er davor eingeschoben.'):'')+'</span><button class="btn sm" data-act="toggleDay">'+lbl+'</button></div>';
+  }
+  el.innerHTML=h;
+  var nw=el.querySelector('.slots');if(nw)nw.scrollTop=keep;
+  updateFormAux();
+}
+function renderFinder(){
+  var opts=[[0,'ab heute'],[1,'in 1 Monat'],[2,'in 2 Monaten'],[3,'in 3 Monaten'],[4,'in 4 Monaten'],[6,'in 6 Monaten']];
+  $('chips').innerHTML=opts.map(function(o){return'<button class="btn sm" data-act="chip" data-m="'+o[0]+'" aria-pressed="'+(ui.chip===o[0])+'">'+tr(o[1])+'</button>'}).join('');
+  if($('fromDate').value!==ui.from)$('fromDate').value=ui.from;
+  var list=nextFree(ui.from,8);
+  $('freeHits').innerHTML=list.length?list.map(function(x){return'<li><button class="hit" data-act="jump" data-d="'+x.ds+'" data-t="'+x.t+'">'+fmtShort(x.ds)+' · <em>'+x.t+'</em></button></li>'}).join(''):'<li class="note">'+tr('Kein freier Termin in den nächsten 18 Monaten ab diesem Datum.')+'</li>';
+}
+function renderSearch(){
+  var q=ui.q.trim().toLowerCase(),el=$('searchHits');
+  if(q.length<2){el.innerHTML='<li class="note">'+tr('Ab zwei Buchstaben wird gesucht. Vergangene Termine stehen am Ende.')+'</li>';return}
+  var hits=[];
+  Object.keys(state.appts).forEach(function(ds){var day=state.appts[ds];Object.keys(day).forEach(function(t){var a=day[t];if([a.name,a.tel,a.note].join(' ').toLowerCase().indexOf(q)>=0)hits.push({ds:ds,t:t,a:a})})});
+  hits.sort(function(x,y){var px=x.ds<todayStr,py=y.ds<todayStr;if(px!==py)return px?1:-1;var k=(x.ds+x.t).localeCompare(y.ds+y.t);return px?-k:k});
+  el.innerHTML=hits.length?hits.slice(0,12).map(function(x){return'<li><button class="hit" data-act="goto" data-d="'+x.ds+'">'+fmtShort(x.ds)+' · '+x.t+' · <em>'+esc(x.a.name)+'</em>'+(x.ds<todayStr?' <small>'+tr('vergangen')+'</small>':'')+'</button></li>'}).join('')+(hits.length>12?'<li class="note">'+tr('{n} weitere Treffer. Suche eingrenzen.',{n:hits.length-12})+'</li>':''):'<li class="note">'+tr('Kein Termin gefunden.')+'</li>';
+}
+function renderSettings(){
+  syncLang();
+  var st=state.settings;
+  $('sLang').value=lang();
+  $('sTitle').value=st.title||'';$('sSlot').value=String(st.slot);$('sHol').checked=!!st.holidays;
+  $('hours').innerHTML=ORDER.map(function(w){var c=st.days[w];return'<div class="hrow"><label class="check"><input type="checkbox" id="hOn'+w+'" data-w="'+w+'" data-k="on"'+(c?' checked':'')+'> '+WDL[w]+'</label>'+
+    '<input type="time" id="hFrom'+w+'" data-w="'+w+'" data-k="from" step="300" value="'+(c?c.from:'08:00')+'"'+(c?'':' disabled')+' aria-label="'+WDL[w]+' '+tr('von')+'">'+
+    '<input type="time" id="hTo'+w+'" data-w="'+w+'" data-k="to" step="300" value="'+(c?c.to:'13:00')+'"'+(c?'':' disabled')+' aria-label="'+WDL[w]+' '+tr('bis')+'"></div>'}).join('');
+  $('storeNote').textContent=storageOK?tr('Eine Sicherung ist eine einzelne Datei mit dem ganzen Terminbuch zum Aufbewahren. Sie lässt sich hier oder auf einem anderen PC wieder einlesen.'):tr('Dieser Browser erlaubt kein Speichern. Die Einträge gehen beim Schließen verloren; bitte eine Sicherung erstellen.');
+}
+function render(){syncLang();tick();renderHead();renderLegend();renderMonths();renderDay();renderFinder();renderSearch();renderLists()}
+
+/* ---- Aktionen ---- */
+function ensureVisible(ds){
+  var d=parse(ds),a=ui.viewStart,end=new Date(a.getFullYear(),a.getMonth()+state.months,1);
+  if(d<a||d>=end)ui.viewStart=new Date(d.getFullYear(),d.getMonth(),1);
+}
+function select(ds,scroll){
+  ui.sel=ds;ui.editing=null;ui.confirmDel=null;ui.pending=null;ensureVisible(ds);
+  if(scroll&&window.matchMedia&&window.matchMedia('(max-width:880px)').matches)setTimeout(function(){$('day').scrollIntoView({behavior:'smooth',block:'start'})},30);
+}
+function firstOpenFrom(ds){var d=parse(ds);for(var i=0;i<370;i++,d=addDays(d,1)){if(dayInfo(iso(d)).open)return iso(d)}return ds}
+function focusForm(){var f=$('fName');if(f){$('slotForm').scrollIntoView({block:'nearest'});f.focus();f.select()}}
+function msg(el,text){el.hidden=!text;el.textContent=text||''}
+function startNew(ds,t,len){ui.confirmDel=null;ui.editing={mode:'new',ds:ds,t:null,t0:t,vals:{name:'',tel:'',note:'',date:ds,start:t,dur:String(Math.min(def(),len||def()))}}}
+function applyImport(text){
+  try{var o=JSON.parse(text);if(!valid(o))throw 0;snap();var lg=state.lang;state=migrate(o);keepLang(lg);save();ui.editing=null;ui.confirmDel=null;ui.pending=null;renderSettings();render();msg($('bakMsg'),tr('Sicherung eingelesen.'))}
+  catch(e){msg($('bakMsg'),tr('Das ist keine gültige Terminbuch-Sicherung.'))}
+}
+
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-act]');if(!b)return;
+  var act=b.dataset.act,t=b.dataset.t,ds=b.dataset.d;
+  captureForm();
+  if(act==='pick'){$('fStart').value=t;ui.editing.force=null;msg($('fMsg'),'');updateFormAux();return}
+  if(act==='sel'&&ui.editing&&ui.editing.mode==='edit'&&$('slotForm')){
+    $('fDate').value=ds;ui.editing.target=ds;ui.editing.force=null;msg($('fMsg'),'');renderMonths();updateFormAux();return;
+  }
+  if(act==='undo'){doUndo();return}
+  if(act==='moveOk'){if(ui.pending)applyMove(ui.pending);ui.pending=null;render();return}
+  if(act==='exportSheets'){exportSheets();return}
+  if(act==='exSel'){$('exFrom').value=$('exTo').value=ui.sel;msg($('exMsg'),'');return}
+  if(act==='conExport'){
+    var list={contacts:Object.keys(state.contacts).sort().map(function(n){return{name:n,tel:state.contacts[n]}}),notes:state.notes.slice().sort()};
+    saveFile('terminbuch-namen.json',new Blob([JSON.stringify(list,null,1)],{type:'application/json'}),$('conMsg'));return;
+  }
+  if(act==='conDel'||act==='telDel'||act==='noteDel'){
+    var nm=b.dataset.n,ix=state.notes.indexOf(nm);
+    if(act==='noteDel'?ix<0:!has(state.contacts,nm))return;
+    snap();
+    if(act==='conDel')delete state.contacts[nm];else if(act==='telDel')state.contacts[nm]='';else state.notes.splice(ix,1);
+    save();renderLists();renderLegend();msg($('conMsg'),tr('Gelöscht. Mit „Rückgängig“ kommt der Eintrag zurück.'));return;
+  }
+  if(act==='conLink'){linkNames();return}
+  if(act==='conGrant'){grantNames();return}
+  if(act==='dirOpen'){if(pyApi)pyApi.open_folder();return}
+  if(act==='dirPick'){if(EXE)exeChooseDir();else pickDir();return}
+  if(act==='dirUnlink'){if(EXE)exeResetDir();else unlinkDir();return}
+  if(act==='dataNew'){linkData(false);return}
+  if(act==='dataOpen'){linkData(true);return}
+  if(act==='dataGrant'){grantData();return}
+  if(act==='dataUnlink'){unlinkData();return}
+  if(act==='dataTake'){dataTake();return}
+  if(act==='dataPush'){dataPush();return}
+  if(act==='dataSetup'){$('setBox').open=true;$('dirHead').scrollIntoView({behavior:'smooth',block:'start'});return}
+  if(act==='conUnlink'){unlinkNames();return}
+  if(act==='conClear'){snap();state.contacts={};state.notes=[];save();render();msg($('conMsg'),tr('Namensliste geleert. Mit „Rückgängig“ kommt sie zurück.'));return}
+  if(act==='sel'){select(ds,true)}
+  else if(act==='prev'){ui.viewStart=new Date(ui.viewStart.getFullYear(),ui.viewStart.getMonth()-1,1)}
+  else if(act==='next'){ui.viewStart=new Date(ui.viewStart.getFullYear(),ui.viewStart.getMonth()+1,1)}
+  else if(act==='today'){ui.viewStart=new Date(now.getFullYear(),now.getMonth(),1);select(firstOpenFrom(todayStr),false)}
+  else if(act==='view'){state.view=b.dataset.v;savePrefs()}
+  else if(act==='book'){startNew(ui.sel,t,Number(b.dataset.len))}
+  else if(act==='insert'){startNew(ui.sel,t,def());ui.editing.t0=null;ui.editing.before=t}
+  else if(act==='edit'){var a=(state.appts[ui.sel]||{})[t];if(a){ui.confirmDel=null;ui.editing={mode:'edit',ds:ui.sel,t:t,target:ui.sel,vals:{name:a.name||'',tel:a.tel||'',note:a.note||'',date:ui.sel,start:t,dur:String(a.dur||def())}}}}
+  else if(act==='cancel'){ui.editing=null;ui.confirmDel=null;ui.pending=null}
+  else if(act==='del'){
+    if(ui.confirmDel===t){snap();var day=state.appts[ui.sel];if(day){delete day[t];if(!Object.keys(day).length)delete state.appts[ui.sel]}ui.confirmDel=null;save()}
+    else{ui.confirmDel=t;ui.editing=null}
+  }
+  else if(act==='toggleDay'){
+    var info=dayInfo(ui.sel);
+    snap();
+    if(info.open){if(info.defOpen)state.overrides[ui.sel]='closed';else delete state.overrides[ui.sel]}
+    else{if(info.defOpen)delete state.overrides[ui.sel];else state.overrides[ui.sel]='open'}
+    ui.editing=null;save();
+  }
+  else if(act==='jump'){
+    select(ds,true);var inf=dayInfo(ds),hit=null;
+    inf.free.forEach(function(f){if(f.t===t&&!isPast(ds,f.s))hit=f});
+    if(hit)startNew(ds,t,hit.e-hit.s);
+  }
+  else if(act==='goto'){select(ds,true)}
+  else if(act==='chip'){ui.chip=Number(b.dataset.m);ui.from=iso(addMonths(now,ui.chip))}
+  else if(act==='clearDemo'){snap();state.appts={};state.overrides={};state.contacts={};state.notes=[];state.demo=false;ui.editing=null;save()}
+  else if(act==='export'){
+    tick();var json=JSON.stringify(state,null,1),file='terminbuch-'+todayStr+'_'+pad(now.getHours())+pad(now.getMinutes())+'.json';
+    saveFile(file,new Blob([json],{type:'application/json'}),$('bakMsg'),function(){$('bak').hidden=false;$('bakBtns').hidden=false;$('bak').value=json;msg($('bakMsg'),tr('Text kopieren und als {f} ablegen.',{f:file}))});
+    return;
+  }
+  else if(act==='copy'){
+    var ta=$('bak');
+    (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(ta.value):Promise.reject()).then(function(){msg($('bakMsg'),tr('In die Zwischenablage kopiert.'))},function(){ta.focus();ta.select();msg($('bakMsg'),tr('Text ist markiert. Mit Strg+C kopieren.'))});
+    return;
+  }
+  else if(act==='importPaste'){applyImport($('bak').value);return}
+  render();
+  if(act==='book'||act==='edit'||act==='jump'||act==='insert')focusForm();
+});
+
+document.addEventListener('submit',function(ev){
+  if(ev.target.id!=='slotForm')return;ev.preventDefault();
+  captureForm();
+  var ed=ui.editing,v=ed.vals,name=v.name.trim(),ds=v.date,st=v.start,dur=Math.round(Number(v.dur)),out=$('fMsg');
+  if(!name){$('fName').focus();return}
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(ds)||!/^\d{2}:\d{2}$/.test(st)){msg(out,tr('Bitte Datum und Beginn vollständig angeben.'));return}
+  if(!(dur>=1)){msg(out,tr('Bitte eine Dauer in Minuten angeben.'));return}
+  var s=toMin(st),e=s+dur;
+  if(e>1440){msg(out,tr('Der Termin würde über Mitternacht hinausgehen.'));return}
+  tick();
+  var excl=ed.mode==='edit'?{ds:ed.ds,t:ed.t}:null,pl=planInsert(ds,excl,s,dur),tgt=pl.info;
+  if(pl.inside){msg(out,tr('Der Beginn liegt mitten im Termin {a}–{b} ({name}). Zum Einschieben den Beginn dieses Termins wählen, sonst eine freie Zeit.',{a:pl.inside.t,b:fromMin(pl.inside.e),name:pl.inside.a.name}));return}
+  if(pl.late){msg(out,tr('Die folgenden Termine würden über Mitternacht hinausrücken.'));return}
+  var soft=[],orig=ed.mode==='edit'?(state.appts[ed.ds]||{})[ed.t]:null;
+  var same=!!orig&&ds===ed.ds&&st===ed.t&&dur===Number(orig.dur);
+  if(pl.shifts.length)soft.push(tr(pl.shifts.length>1?'Der Termin wird eingeschoben, dadurch rücken {n} Termine nach hinten: {list}':'Der Termin wird eingeschoben, dadurch rückt 1 Termin nach hinten: {list}',{n:pl.shifts.length,list:pl.shifts.map(function(x){return x.t+' → '+x.nt+' '+x.name}).join('; ')}));
+  if(!same){
+    if(!tgt.open)soft.push(tgt.holiday?tr('Der Tag ist ein Feiertag ({h})',{h:tgt.holiday}):tr('An diesem Tag ist keine Ordination'));
+    else if(s<tgt.w.a||e>tgt.w.b)soft.push(tr('Liegt außerhalb der Öffnungszeit {a}–{b}',{a:tgt.w.from,b:tgt.w.to}));
+    else if(pl.over)soft.push(tr('Der letzte verschobene Termin endet um {end}, nach Ordinationsende um {close}',{end:fromMin(pl.end),close:tgt.w.to}));
+    if(isPast(ds,s))soft.push(tr('Liegt in der Vergangenheit'));
+  }
+  var sig=ds+'|'+st+'|'+dur;
+  if(soft.length&&ed.force!==sig){ed.force=sig;msg(out,soft.join('. ')+'. '+tr('Zum Bestätigen noch einmal auf „{b}“ klicken.',{b:$('fSave').textContent}));return}
+  snap();
+  if(ed.mode==='edit'){var od=state.appts[ed.ds];if(od){delete od[ed.t];if(!Object.keys(od).length)delete state.appts[ed.ds]}}
+  var day=state.appts[ds]=state.appts[ds]||{},rest=pl.shifts.map(function(x){return{nt:x.nt,a:day[x.t]}});
+  pl.shifts.forEach(function(x){delete day[x.t]});
+  day[st]={dur:dur,name:name,tel:v.tel.trim(),note:v.note.trim()};
+  rest.forEach(function(x){day[x.nt]=x.a});
+  remember(state,name,v.tel.trim(),v.note.trim());
+  ui.editing=null;ui.sel=ds;ensureVisible(ds);save();render();
+});
+$('day').addEventListener('input',function(ev){
+  var id=ev.target.id;if(!ui.editing)return;
+  if(id==='fName'){
+    var nm=ev.target.value.trim(),tel=$('fTel');
+    if(has(state.contacts,nm)&&state.contacts[nm]&&(!tel.value||tel.value===ui.editing.autoTel)){tel.value=state.contacts[nm];ui.editing.autoTel=tel.value}
+    return;
+  }
+  if(['fDate','fStart','fDur'].indexOf(id)<0)return;
+  ui.editing.force=null;msg($('fMsg'),'');
+  if(id==='fDate'&&ui.editing.mode==='edit'){ui.editing.target=ev.target.value;renderMonths()}
+  updateFormAux();
+});
+document.addEventListener('keydown',function(ev){
+  if(ev.key==='Escape'&&(ui.editing||ui.confirmDel||ui.pending)){ui.editing=null;ui.confirmDel=null;ui.pending=null;render();return}
+  if((ev.ctrlKey||ev.metaKey)&&!ev.shiftKey&&String(ev.key).toLowerCase()==='z'){
+    var tg=ev.target&&ev.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;
+    ev.preventDefault();doUndo();
+  }
+});
+$('q').addEventListener('input',function(){ui.q=this.value;renderSearch()});
+$('fromDate').addEventListener('change',function(){if(this.value){ui.from=this.value;ui.chip=-1;renderFinder()}});
+$('sMonths').addEventListener('change',function(){captureForm();state.months=Math.max(1,Math.min(12,Number(this.value)||6));savePrefs();if(ui.sel)ensureVisible(ui.sel);render()});
+var titleSnap=false;
+$('sTitle').addEventListener('focus',function(){titleSnap=false});
+$('sTitle').addEventListener('input',function(){if(!titleSnap){snap();titleSnap=true}state.settings.title=this.value.trim();save();renderHead();renderLegend()});
+$('sSlot').addEventListener('change',function(){captureForm();snap();state.settings.slot=Number(this.value);save();render()});
+$('sHol').addEventListener('change',function(){captureForm();snap();state.settings.holidays=this.checked;save();render()});
+$('sLang').addEventListener('change',function(){setLang(this.value)});
+$('hours').addEventListener('change',function(ev){
+  var el=ev.target,w=el.dataset.w,k=el.dataset.k,days=state.settings.days;if(!w)return;
+  snap();
+  var from=($('hFrom'+w).value||'08:00').slice(0,5),to=($('hTo'+w).value||'13:00').slice(0,5);
+  if(k==='on'){$('hFrom'+w).disabled=$('hTo'+w).disabled=!el.checked;if(!el.checked)delete days[w]}
+  if($('hOn'+w).checked){
+    if(toMin(to)<=toMin(from)){msg($('setMsg'),WDL[w]+': '+tr('Das Ende muss nach dem Beginn liegen.'));undo.pop();return}
+    days[w]={from:from,to:to};
+  }
+  msg($('setMsg'),'');captureForm();save();render();
+});
+$('impFile').addEventListener('change',function(){
+  var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(){applyImport(String(r.result))};r.readAsText(f);this.value='';
+});
+
+/* ---- Hinweis beim Überfahren ---- */
+var tip=$('tip');
+$('months').addEventListener('pointerover',function(ev){
+  if(ev.pointerType==='touch')return;var c=ev.target.closest('.c');if(!c){tip.hidden=true;return}
+  tip.textContent=c.dataset.tip;tip.hidden=false;
+  var r=c.getBoundingClientRect(),w=tip.offsetWidth,x=Math.max(8,Math.min(window.innerWidth-w-8,r.left+r.width/2-w/2)),y=r.top-tip.offsetHeight-6;
+  if(y<4)y=r.bottom+6;tip.style.left=x+'px';tip.style.top=y+'px';
+});
+$('months').addEventListener('pointerleave',function(){tip.hidden=true});
+window.addEventListener('scroll',function(){tip.hidden=true},{passive:true});
+
+/* ---- Ziehen und Ablegen ---- */
+var dropEl=null;
+function elOf(ev){var t=ev.target;return t&&t.nodeType===1?t:t&&t.parentElement}
+function clearDrop(){if(dropEl){dropEl.classList.remove('drop','dropbefore');dropEl=null}}
+/* Ziel beim Ablegen: eine freie Zeit oder ein anderer Termin, vor dem eingeschoben wird */
+function dropTarget(ev){
+  var el=elOf(ev),li=el&&el.closest('li.slot');if(!li||!ui.drag)return null;
+  var fb=li.querySelector('.free');
+  if(fb)return{li:li,t:fb.dataset.t,cls:'drop'};
+  if(li.dataset.drag&&li.dataset.drag!==ui.drag.t)return{li:li,t:li.dataset.drag,cls:'dropbefore'};
+  return null;
+}
+$('day').addEventListener('dragstart',function(ev){
+  var el=elOf(ev),li=el&&el.closest('li[data-drag]');if(!li)return;
+  ui.drag={ds:ui.sel,t:li.dataset.drag};ev.dataTransfer.effectAllowed='move';
+  try{ev.dataTransfer.setData('text/plain',li.dataset.drag)}catch(e){}
+  li.classList.add('dragging');tip.hidden=true;
+});
+$('day').addEventListener('dragover',function(ev){
+  if(!ui.drag)return;var tg=dropTarget(ev);if(!tg){clearDrop();return}
+  ev.preventDefault();ev.dataTransfer.dropEffect='move';
+  if(dropEl!==tg.li){clearDrop();dropEl=tg.li;tg.li.classList.add(tg.cls)}
+});
+$('day').addEventListener('drop',function(ev){
+  if(!ui.drag)return;var tg=dropTarget(ev);if(!tg)return;
+  ev.preventDefault();var d=ui.drag;ui.drag=null;clearDrop();
+  planMove(d.ds,d.t,tg.t);render();
+});
+$('months').addEventListener('dragover',function(ev){
+  if(!ui.drag)return;var el=elOf(ev),c=el&&el.closest('.c');if(!c){clearDrop();return}
+  ev.preventDefault();ev.dataTransfer.dropEffect='move';
+  if(dropEl!==c){clearDrop();dropEl=c;c.classList.add('drop')}
+});
+$('months').addEventListener('drop',function(ev){
+  if(!ui.drag)return;var el=elOf(ev),c=el&&el.closest('.c');if(!c)return;
+  ev.preventDefault();var d=ui.drag,a=(state.appts[d.ds]||{})[d.t];ui.drag=null;clearDrop();
+  if(!a||c.dataset.d===d.ds)return;
+  ui.pending=null;ui.confirmDel=null;
+  ui.editing={mode:'edit',ds:d.ds,t:d.t,target:c.dataset.d,vals:{name:a.name||'',tel:a.tel||'',note:a.note||'',date:c.dataset.d,start:d.t,dur:String(a.dur||def())}};
+  render();focusForm();
+});
+document.addEventListener('dragend',function(){ui.drag=null;clearDrop();var x=document.querySelector('.slot.dragging');if(x)x.classList.remove('dragging')});
+
+/* ---- Dateien speichern ---- */
+function saveFile(name,blob,out,fallback){
+  function viaLink(pre){
+    try{var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();msg(out,(pre||'')+tr('Gespeichert als {f} im Download-Ordner des Browsers.',{f:name}))}
+    catch(e){msg(out,tr('Speichern ist fehlgeschlagen.'))}
+  }
+  if(EXE){
+    msg(out,tr('Wird gespeichert …'));
+    blobB64(blob).then(function(b64){return pyApi.write_bytes(name,b64)}).then(function(r){if(!r||!r.ok)throw new Error('write');msg(out,tr('Gespeichert: {f}',{f:r.path}))},function(){msg(out,tr('Speichern ist fehlgeschlagen.'))});
+    return;
+  }
+  if(dirH){
+    var dn=dirH.name;msg(out,tr('Wird gespeichert …'));
+    dirWrite(name,blob).then(function(){msg(out,tr('Gespeichert im Speicherordner {d}: {f}',{d:dn,f:name}))},function(){viaLink(tr('Im Speicherordner ließ sich nicht speichern.')+' ')});
+    return;
+  }
+  if(location.protocol==='file:'||!(window.claude&&window.claude.use)){viaLink();return}
+  var local=tr('In der lokalen Datei Terminbuch.html geht es.');
+  msg(out,tr('Wird vorbereitet …'));
+  window.claude.use('downloads').then(function(dl){
+    if(!dl){if(fallback)fallback();else msg(out,tr('In dieser Ansicht lassen sich keine Dateien speichern.')+' '+local);return}
+    return dl.save({filename:name,data:blob}).then(function(){msg(out,tr('Gespeichert: {f}',{f:name}))},function(err){
+      var c=err&&err.code;
+      if(c==='declined')msg(out,tr('Nicht gespeichert.'));
+      else if(c==='rejected_extension'||c==='extension_not_enabled')msg(out,tr('Dieses Format lässt sich in dieser Ansicht nicht speichern.')+' '+local);
+      else if(fallback)fallback();
+      else msg(out,tr('Speichern ist in dieser Ansicht nicht möglich.')+' '+local);
+    });
+  });
+}
+$('conQ').addEventListener('input',renderLists);
+$('conFile').addEventListener('change',function(){
+  var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(){
+    try{
+      var o=JSON.parse(String(r.result)),n=0;if(!o||!Array.isArray(o.contacts))throw 0;
+      snap();
+      o.contacts.forEach(function(c){if(c&&typeof c.name==='string'&&c.name.trim()){remember(state,c.name.trim(),String(c.tel||'').trim(),'');n++}});
+      (Array.isArray(o.notes)?o.notes:[]).forEach(function(x){if(typeof x==='string'&&x.trim())remember(state,'','',x.trim())});
+      save();render();msg($('conMsg'),tr('{a} eingelesen.',{a:plural(n,'Name','Namen')}));
+    }catch(e){msg($('conMsg'),tr('Das ist keine gültige Namensliste.'))}
+  };
+  r.readAsText(f);this.value='';
+});
+
+/* ---- Tagesblätter in sieben Formaten ---- */
+function XH(){return['Beginn','Ende','Dauer','Name','Telefon','Notiz'].map(function(k){return tr(k)})}
+function X(s){return String(s==null?'':s).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function u8(str){return new TextEncoder().encode(str)}
+function hhmm(m){return m>=1440?'24:00':fromMin(m)}
+function rowCells(r){return[hhmm(r.s),hhmm(r.e),(r.e-r.s)+' '+tr('Min.'),r.name,r.tel,r.note]}
+function collect(from,to,withFree){
+  var out=[],d=parse(from),end=parse(to);
+  for(var i=0;i<=400&&d<=end;i++,d=addDays(d,1)){
+    var ds=iso(d),info=dayInfo(ds);if(!info.open&&!info.nb)continue;
+    var rows=info.appts.map(function(x){return{s:x.s,e:x.e,name:x.a.name||'',tel:x.a.tel||'',note:x.a.note||'',free:false}});
+    if(withFree)info.free.forEach(function(f){rows.push({s:f.s,e:f.e,name:tr('frei'),tel:'',note:'',free:true})});
+    rows.sort(function(a,b){return a.s-b.s});
+    var merged=[];
+    rows.forEach(function(r){var p=merged[merged.length-1];if(p&&p.free&&r.free&&p.e===r.s)p.e=r.e;else merged.push(r)});
+    out.push({ds:ds,long:fmtLong(ds),sub:(info.open?info.w.from+'–'+info.w.to:tr('geschlossen'))+' · '+plural(info.nb,'Termin','Termine'),rows:merged});
+  }
+  return out;
+}
+function asTxt(days,title,range){
+  var L=[title,range,''];
+  days.forEach(function(d){
+    L.push(d.long+'  ('+d.sub+')');L.push(new Array(73).join('-'));
+    if(!d.rows.length)L.push('  '+tr('keine Termine'));
+    d.rows.forEach(function(r){L.push((hhmm(r.s)+'–'+hhmm(r.e)+'  '+String(r.e-r.s).padStart(3)+' '+tr('Min.')+'  '+r.name.padEnd(26)+' '+r.tel.padEnd(16)+' '+r.note).replace(/\s+$/,''))});
+    L.push('');
+  });
+  return'\uFEFF'+L.join('\r\n');
+}
+function asMd(days,title,range){
+  function c(v){return String(v).replace(/\|/g,'\\|').replace(/[\r\n]+/g,' ')}
+  var L=['# '+title,'',range,''];
+  days.forEach(function(d){
+    L.push('## '+d.long,'',d.sub,'');
+    if(!d.rows.length){L.push(tr('Keine Termine.'),'');return}
+    L.push('| '+XH().join(' | ')+' |','|'+XH().map(function(){return' --- '}).join('|')+'|');
+    d.rows.forEach(function(r){L.push('| '+rowCells(r).map(c).join(' | ')+' |')});
+    L.push('');
+  });
+  return L.join('\n');
+}
+/* ZIP ohne Kompression: Grundlage für docx, xlsx, odt und ods */
+var crcT=null;
+function crc32(b){
+  if(!crcT){crcT=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;crcT[n]=c>>>0}}
+  var crc=-1;for(var i=0;i<b.length;i++)crc=crcT[(crc^b[i])&255]^(crc>>>8);return(crc^-1)>>>0;
+}
+function zip(files){
+  var parts=[],cd=[],off=0,cdLen=0;
+  files.forEach(function(f){
+    var nm=u8(f[0]),d=u8(f[1]),crc=crc32(d),h=new DataView(new ArrayBuffer(30)),c=new DataView(new ArrayBuffer(46));
+    h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(12,0x21,true);
+    h.setUint32(14,crc,true);h.setUint32(18,d.length,true);h.setUint32(22,d.length,true);h.setUint16(26,nm.length,true);
+    c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(14,0x21,true);
+    c.setUint32(16,crc,true);c.setUint32(20,d.length,true);c.setUint32(24,d.length,true);c.setUint16(28,nm.length,true);c.setUint32(42,off,true);
+    parts.push(new Uint8Array(h.buffer),nm,d);cd.push(new Uint8Array(c.buffer),nm);
+    off+=30+nm.length+d.length;cdLen+=46+nm.length;
+  });
+  var e=new DataView(new ArrayBuffer(22));
+  e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cdLen,true);e.setUint32(16,off,true);
+  return parts.concat(cd,[new Uint8Array(e.buffer)]);
+}
+var XMLH='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+var RELS=XMLH+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="TARGET"/></Relationships>';
+function asDocx(days,title,range){
+  function P(text,o){o=o||{};return'<w:p><w:pPr><w:spacing w:before="'+(o.before||0)+'" w:after="'+(o.after||0)+'"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>'+(o.b?'<w:b/>':'')+(o.c?'<w:color w:val="'+o.c+'"/>':'')+'<w:sz w:val="'+(o.sz||21)+'"/></w:rPr><w:t xml:space="preserve">'+X(text)+'</w:t></w:r></w:p>'}
+  var W=[850,850,1000,2938,1900,2100];
+  function tbl(rows){
+    var h='<w:tbl><w:tblPr><w:tblW w:w="9638" w:type="dxa"/><w:tblBorders>'+['top','left','bottom','right','insideH','insideV'].map(function(n){return'<w:'+n+' w:val="single" w:sz="4" w:space="0" w:color="999999"/>'}).join('')+'</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>'+W.map(function(w){return'<w:gridCol w:w="'+w+'"/>'}).join('')+'</w:tblGrid>';
+    rows.forEach(function(r,ri){h+='<w:tr>'+r.cells.map(function(v,ci){return'<w:tc><w:tcPr><w:tcW w:w="'+W[ci]+'" w:type="dxa"/></w:tcPr>'+P(v,{b:ri===0,c:r.free?'808080':''})+'</w:tc>'}).join('')+'</w:tr>'});
+    return h+'</w:tbl>';
+  }
+  var b=P(title,{b:true,sz:36,after:60})+P(range,{c:'606060',after:120});
+  days.forEach(function(d){
+    b+=P(d.long,{b:true,sz:28,before:280,after:40})+P(d.sub,{c:'606060',after:100});
+    b+=d.rows.length?tbl([{cells:XH()}].concat(d.rows.map(function(r){return{cells:rowCells(r),free:r.free}})))+P('',{}):P(tr('Keine Termine.'),{});
+  });
+  var doc=XMLH+'<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+b+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>';
+  return zip([
+    ['[Content_Types].xml',XMLH+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'],
+    ['_rels/.rels',RELS.replace('TARGET','word/document.xml')],
+    ['word/document.xml',doc]
+  ]);
+}
+function flatRows(days){
+  var out=[];
+  days.forEach(function(d){var dt=parse(d.ds);d.rows.forEach(function(r){out.push({ds:d.ds,wd:WDL[dt.getDay()],r:r})})});
+  return out;
+}
+function SH(){return['Datum','Wochentag','Beginn','Ende','Dauer (Min.)','Name','Telefon','Notiz'].map(function(k){return tr(k)})}
+function asXlsx(days){
+  var NS='http://schemas.openxmlformats.org/spreadsheetml/2006/main',L='ABCDEFGH';
+  function str(col,row,v,st){return'<c r="'+L[col]+row+'" t="inlineStr"'+(st?' s="'+st+'"':'')+'><is><t xml:space="preserve">'+X(v)+'</t></is></c>'}
+  function num(col,row,v,st){return'<c r="'+L[col]+row+'"'+(st?' s="'+st+'"':'')+'><v>'+v+'</v></c>'}
+  var rows='<row r="1">'+SH().map(function(h,i){return str(i,1,h,1)}).join('')+'</row>';
+  flatRows(days).forEach(function(x,i){
+    var n=i+2,p=x.ds.split('-').map(Number),serial=Math.round(Date.UTC(p[0],p[1]-1,p[2])/864e5)+25569,r=x.r;
+    rows+='<row r="'+n+'">'+num(0,n,serial,2)+str(1,n,x.wd)+num(2,n,r.s/1440,3)+num(3,n,r.e/1440,3)+num(4,n,r.e-r.s)+str(5,n,r.name)+str(6,n,r.tel)+str(7,n,r.note)+'</row>';
+  });
+  var widths=[12,13,9,9,13,28,18,32];
+  var sheet=XMLH+'<worksheet xmlns="'+NS+'"><cols>'+widths.map(function(w,i){return'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>'}).join('')+'</cols><sheetData>'+rows+'</sheetData></worksheet>';
+  var styles=XMLH+'<styleSheet xmlns="'+NS+'"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="14" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="20" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs></styleSheet>';
+  return zip([
+    ['[Content_Types].xml',XMLH+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['_rels/.rels',RELS.replace('TARGET','xl/workbook.xml')],
+    ['xl/workbook.xml',XMLH+'<workbook xmlns="'+NS+'" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+X(tr('Termine'))+'" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels',XMLH+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml',styles],
+    ['xl/worksheets/sheet1.xml',sheet]
+  ]);
+}
+var ODNS='xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" office:version="1.2"';
+function odPack(mime,content){
+  return zip([
+    ['mimetype',mime],
+    ['META-INF/manifest.xml','<?xml version="1.0" encoding="UTF-8"?>\n<manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0" manifest:version="1.2"><manifest:file-entry manifest:full-path="/" manifest:version="1.2" manifest:media-type="'+mime+'"/><manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/></manifest:manifest>'],
+    ['content.xml','<?xml version="1.0" encoding="UTF-8"?>\n'+content]
+  ]);
+}
+function asOds(days){
+  function cell(v,st){return'<table:table-cell office:value-type="string"'+(st?' table:style-name="'+st+'"':'')+'><text:p>'+X(v)+'</text:p></table:table-cell>'}
+  var rows='<table:table-row>'+SH().map(function(h){return cell(h,'hd')}).join('')+'</table:table-row>';
+  flatRows(days).forEach(function(x){
+    var r=x.r,p=x.ds.split('-');
+    rows+='<table:table-row>'+cell(curL==='en'?x.ds:p[2]+'.'+p[1]+'.'+p[0])+cell(x.wd)+cell(hhmm(r.s))+cell(hhmm(r.e))+
+      '<table:table-cell office:value-type="float" office:value="'+(r.e-r.s)+'"><text:p>'+(r.e-r.s)+'</text:p></table:table-cell>'+cell(r.name)+cell(r.tel)+cell(r.note)+'</table:table-row>';
+  });
+  return odPack('application/vnd.oasis.opendocument.spreadsheet','<office:document-content '+ODNS+'><office:automatic-styles><style:style style:name="hd" style:family="table-cell"><style:text-properties fo:font-weight="bold"/></style:style></office:automatic-styles><office:body><office:spreadsheet><table:table table:name="'+X(tr('Termine'))+'"><table:table-column table:number-columns-repeated="8"/>'+rows+'</table:table></office:spreadsheet></office:body></office:document-content>');
+}
+function asOdt(days,title,range){
+  function P(v,st){return'<text:p'+(st?' text:style-name="'+st+'"':'')+'>'+X(v)+'</text:p>'}
+  var b=P(title,'Tt')+P(range,'Sub'),n=0;
+  days.forEach(function(d){
+    b+=P(d.long,'Hd')+P(d.sub,'Sub');
+    if(!d.rows.length){b+=P(tr('Keine Termine.'));return}
+    n++;
+    b+='<table:table table:name="'+X(tr('Tag'))+n+'"><table:table-column table:number-columns-repeated="6"/>'+
+      [{cells:XH(),hd:true}].concat(d.rows.map(function(r){return{cells:rowCells(r)}})).map(function(r){
+        return'<table:table-row>'+r.cells.map(function(v){return'<table:table-cell table:style-name="Cl" office:value-type="string">'+P(v,r.hd?'Bd':'')+'</table:table-cell>'}).join('')+'</table:table-row>';
+      }).join('')+'</table:table>';
+  });
+  var styles='<office:automatic-styles>'+
+    '<style:style style:name="Tt" style:family="paragraph"><style:paragraph-properties fo:margin-bottom="0.1cm"/><style:text-properties fo:font-size="18pt" fo:font-weight="bold"/></style:style>'+
+    '<style:style style:name="Hd" style:family="paragraph"><style:paragraph-properties fo:margin-top="0.5cm" fo:margin-bottom="0.05cm"/><style:text-properties fo:font-size="14pt" fo:font-weight="bold"/></style:style>'+
+    '<style:style style:name="Sub" style:family="paragraph"><style:paragraph-properties fo:margin-bottom="0.2cm"/><style:text-properties fo:color="#606060"/></style:style>'+
+    '<style:style style:name="Bd" style:family="paragraph"><style:text-properties fo:font-weight="bold"/></style:style>'+
+    '<style:style style:name="Cl" style:family="table-cell"><style:table-cell-properties fo:padding="0.08cm" fo:border="0.5pt solid #999999"/></style:style>'+
+    '</office:automatic-styles>';
+  return odPack('application/vnd.oasis.opendocument.text','<office:document-content '+ODNS+'>'+styles+'<office:body><office:text>'+b+'</office:text></office:body></office:document-content>');
+}
+/* PDF: A4, Helvetica, Text und Linien, von Hand zusammengesetzt */
+function pdfStr(s){
+  /* Zeichen außerhalb von Latin-1: zuerst die WinAnsi-Sonderplätze, sonst der Grundbuchstabe ohne Akzent */
+  var MAP={0x2013:150,0x2014:151,0x20AC:128,0x201E:132,0x201C:147,0x201D:148,0x2018:145,0x2019:146,0x201A:130,0x2026:133,0x2022:149,0x0160:138,0x0161:154,0x017D:142,0x017E:158,0x0152:140,0x0153:156,0x0178:159};
+  var BASE={0x0141:76,0x0142:108,0x0110:68,0x0111:100},o='';
+  for(var i=0;i<s.length;i++){
+    var c=s.charCodeAt(i);
+    if(c>=0x300&&c<=0x36F)continue;
+    if(MAP[c])c=MAP[c];
+    else if(c>255){var b=s.charAt(i).normalize?s.charAt(i).normalize('NFD').charCodeAt(0):63;c=b<128?b:(BASE[c]||63)}
+    if(c===40||c===41||c===92)o+='\\'+String.fromCharCode(c);
+    else if(c<32||c>126)o+='\\'+('000'+c.toString(8)).slice(-3);
+    else o+=String.fromCharCode(c);
+  }
+  return o;
+}
+function asPdf(days,title,range){
+  var pages=[],cur=[],y=0,COL=[50,95,140,195,345,445],WID=[40,40,50,145,95,100];
+  function clip(v,w,sz){var max=Math.floor(w/(sz*0.5));v=String(v);return v.length>max?v.slice(0,max-1)+'…':v}
+  function T(x,yy,txt,f,sz,gray){cur.push('BT '+(gray?'0.45 g ':'0 g ')+'/F'+f+' '+sz+' Tf '+x+' '+yy.toFixed(1)+' Td ('+pdfStr(String(txt))+') Tj ET')}
+  function rule(yy,g){cur.push(g+' G 0.5 w 50 '+yy.toFixed(1)+' m 545 '+yy.toFixed(1)+' l S')}
+  function page(){if(cur.length)pages.push(cur);cur=[];y=792}
+  function head(){XH().forEach(function(h,i){T(COL[i],y,h,2,8.5)});y-=5;rule(y,'0.35');y-=13}
+  page();T(50,y,title,2,16);y-=17;T(50,y,range,1,10,true);y-=8;
+  days.forEach(function(d){
+    if(y<120)page();
+    y-=22;T(50,y,d.long,2,12);y-=13;T(50,y,d.sub,1,9,true);y-=17;
+    if(!d.rows.length){T(50,y,tr('Keine Termine.'),1,10);y-=6;return}
+    head();
+    d.rows.forEach(function(r){
+      if(y<60){page();y-=10;T(50,y,d.long+' ('+tr('Fortsetzung')+')',2,10);y-=18;head()}
+      rowCells(r).forEach(function(v,i){T(COL[i],y,clip(v,WID[i],10),1,10,r.free)});
+      y-=4;rule(y,'0.8');y-=12;
+    });
+  });
+  pages.push(cur);
+  pages.forEach(function(p,i){p.push('BT 0.45 g /F1 8 Tf 50 32 Td ('+pdfStr(title+' · '+tr('Seite {a} von {b}',{a:i+1,b:pages.length}))+') Tj ET')});
+  var objs=[],kids=[];
+  objs[0]='<< /Type /Catalog /Pages 2 0 R >>';
+  objs[2]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  objs[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  pages.forEach(function(p,i){
+    var body=p.join('\n'),pn=5+i*2,cn=pn+1;kids.push(pn+' 0 R');
+    objs[pn-1]='<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+cn+' 0 R >>';
+    objs[cn-1]='<< /Length '+body.length+' >>\nstream\n'+body+'\nendstream';
+  });
+  objs[1]='<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+pages.length+' >>';
+  var out='%PDF-1.4\n',offs=[];
+  objs.forEach(function(o,i){offs[i]=out.length;out+=(i+1)+' 0 obj\n'+o+'\nendobj\n'});
+  var xr=out.length;out+='xref\n0 '+(objs.length+1)+'\n0000000000 65535 f \n';
+  offs.forEach(function(o){out+=('0000000000'+o).slice(-10)+' 00000 n \n'});
+  out+='trailer\n<< /Size '+(objs.length+1)+' /Root 1 0 R >>\nstartxref\n'+xr+'\n%%EOF\n';
+  var b=new Uint8Array(out.length);for(var i=0;i<out.length;i++)b[i]=out.charCodeAt(i)&255;
+  return[b];
+}
+var MIME={pdf:'application/pdf',txt:'text/plain',md:'text/markdown',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',odt:'application/vnd.oasis.opendocument.text',ods:'application/vnd.oasis.opendocument.spreadsheet'};
+function exportSheets(){
+  var from=$('exFrom').value,to=$('exTo').value,fmt=$('exFmt').value,out=$('exMsg');
+  if(!from||!to||to<from){msg(out,tr('Bitte einen gültigen Zeitraum wählen.'));return}
+  if((parse(to)-parse(from))/864e5>400){msg(out,tr('Der Zeitraum darf höchstens 400 Tage umfassen.'));return}
+  tick();
+  var days=collect(from,to,$('exFree').checked);
+  if(!days.length){msg(out,tr('In diesem Zeitraum gibt es keinen Ordinationstag.'));return}
+  var title=tr('Terminbuch {n}',{n:state.settings.title||tr('Ordination')}),range=tr('Zeitraum {a} bis {b} · erstellt am {c}',{a:fmtShort(from),b:fmtShort(to),c:fmtShort(todayStr)});
+  var parts=fmt==='pdf'?asPdf(days,title,range):fmt==='docx'?asDocx(days,title,range):fmt==='odt'?asOdt(days,title,range):fmt==='xlsx'?asXlsx(days):fmt==='ods'?asOds(days):[fmt==='md'?asMd(days,title,range):asTxt(days,title,range)];
+  saveFile(tr('tagesblaetter')+'_'+from+(to!==from?tr('_bis_')+to:'')+'.'+fmt,new Blob(parts,{type:MIME[fmt]}),out);
+}
+$('exFrom').value=todayStr;$('exTo').value=iso(addDays(now,14));
+
+/* ---- Namensdatei: automatisch speichern und einlesen (Chrome, Edge) ---- */
+var fsOK=!EXE&&typeof window.showSaveFilePicker==='function'&&!!window.indexedDB&&(function(){try{return window.self===window.top}catch(e){return false}})();
+function noFile(err){return{h:null,ready:false,need:false,last:'',err:err||''}}
+var nameFile=noFile(),nameT=0;
+function idb(mode,fn){
+  return new Promise(function(res,rej){
+    var r=indexedDB.open('terminbuch',1);
+    r.onupgradeneeded=function(){r.result.createObjectStore('kv')};
+    r.onerror=function(){rej(r.error)};
+    r.onsuccess=function(){var db=r.result,tx=db.transaction('kv',mode),q=fn(tx.objectStore('kv'));tx.oncomplete=function(){db.close();res(q&&q.result)};tx.onerror=function(){db.close();rej(tx.error)}};
+  });
+}
+function namesJSON(){return JSON.stringify({contacts:Object.keys(state.contacts).sort().map(function(n){return{name:n,tel:state.contacts[n]}}),notes:state.notes.slice().sort()},null,1)}
+function mergeNameList(o){
+  var n=0;
+  (Array.isArray(o.contacts)?o.contacts:[]).forEach(function(c){if(c&&typeof c.name==='string'&&c.name.trim()){remember(state,c.name.trim(),String(c.tel||'').trim(),'');n++}});
+  (Array.isArray(o.notes)?o.notes:[]).forEach(function(x){if(typeof x==='string'&&x.trim())remember(state,'','',x.trim())});
+  return n;
+}
+function queueNames(){if(!nameFile||!nameFile.ready)return;clearTimeout(nameT);nameT=setTimeout(writeNames,400)}
+function writeNames(){
+  var nf=nameFile;if(!nf.h||!nf.ready)return;var j=namesJSON();if(j===nf.last)return;
+  nf.h.createWritable().then(function(w){return w.write(j).then(function(){return w.close()})}).then(function(){nf.last=j;nf.err='';nameStatus()},function(e){if(e&&e.name==='NotAllowedError'){nf.need=true;nf.err=''}else nf.err=tr('Die Namensdatei ließ sich nicht schreiben.');nameStatus()});
+}
+function readNames(){
+  var nf=nameFile;
+  return nf.h.getFile().then(function(f){return f.text()}).then(function(t){
+    var before=namesJSON();
+    if(t.trim()){var o=null;try{o=JSON.parse(t)}catch(e){}if(!o||!Array.isArray(o.contacts))throw new Error('format');mergeNameList(o)}
+    nf.ready=true;nf.need=false;nf.err='';if(namesJSON()!==before)save();else queueNames();renderLists();
+  });
+}
+function nameStatus(){
+  var h=nameFile.h;
+  $('btnConLink').hidden=!fsOK||!!h;$('btnConUnlink').hidden=!h;$('btnConGrant').hidden=!(h&&nameFile.need);
+  $('nameBar').hidden=!(h&&nameFile.need);
+  if(h)$('nameBarTxt').textContent=tr('Die Namensdatei {f} ist verbunden. Der Browser verlangt für diese Sitzung noch die Erlaubnis zum Lesen und Schreiben.',{f:h.name});
+  $('conFileNote').textContent=!fsOK?tr('Automatisches Speichern in eine Datei geht nur mit Chrome oder Edge und der lokalen Datei Terminbuch.html.')
+    :nameFile.err?nameFile.err
+    :!h?tr('Mit einer verbundenen Datei wird die Namensliste bei jeder Änderung von selbst gespeichert und beim Start eingelesen.')
+    :nameFile.need?tr('Verbunden mit {f}. Die Erlaubnis für diese Sitzung fehlt noch.',{f:h.name})
+    :tr('Verbunden mit {f}. Jede Änderung wird von selbst in die Datei geschrieben, beim Start wird sie eingelesen.',{f:h.name});
+}
+function linkNames(){
+  window.showSaveFilePicker(pickOpts({suggestedName:'terminbuch-namen.json',types:[{description:tr('Namensliste (JSON)'),accept:{'application/json':['.json']}}]})).then(function(h){
+    nameFile=noFile();nameFile.h=h;
+    return idb('readwrite',function(s){return s.put(h,'names')}).catch(function(){}).then(readNames);
+  }).then(nameStatus,function(e){
+    if(e&&e.name==='AbortError')return;
+    nameFile=noFile(e&&e.message==='format'?tr('Die gewählte Datei enthält keine Namensliste. Sie wurde nicht verändert.'):tr('Die Datei ließ sich nicht verbinden.'));
+    idb('readwrite',function(s){return s.delete('names')}).catch(function(){});nameStatus();
+  });
+}
+function grantNames(){
+  var h=nameFile.h;if(!h)return;
+  h.requestPermission({mode:'readwrite'}).then(function(p){if(p==='granted')return readNames()}).then(nameStatus,function(){nameFile.err=tr('Die Namensdatei ließ sich nicht lesen.');nameStatus()});
+}
+function unlinkNames(){nameFile=noFile();idb('readwrite',function(s){return s.delete('names')}).catch(function(){});nameStatus()}
+function initNameFile(){
+  nameStatus();if(!fsOK)return;
+  idb('readonly',function(s){return s.get('names')}).then(function(h){
+    if(!h)return;nameFile.h=h;
+    return h.queryPermission({mode:'readwrite'}).then(function(p){if(p==='granted')return readNames();nameFile.need=true});
+  }).then(nameStatus,function(){nameFile.err=tr('Die Namensdatei ließ sich nicht lesen.');nameStatus()});
+}
+
+/* ---- Datendatei: das ganze Terminbuch automatisch speichern und einlesen (Chrome, Edge) ---- */
+var SKEY='terminbuch.sync';
+function noData(err){return{h:null,ready:false,need:false,err:err||'',sync:'',savedAt:null,conflict:null,busy:false,again:false}}
+var dataFile=noData(),dataT=0;
+function fstamp(o){return o&&typeof o.stamp==='string'?o.stamp:''}
+function readSync(){try{return localStorage.getItem(SKEY)||''}catch(e){return''}}
+function setSync(s){dataFile.sync=s;if(!EXE){try{localStorage.setItem(SKEY,s)}catch(e){}}}
+function countAppts(o){var n=0;Object.keys(o.appts||{}).forEach(function(k){n+=Object.keys(o.appts[k]).length});return n}
+function isBlank(){return!!state.demo||!countAppts(state)}
+function fmtClock(d){return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
+function fmtWhen(ms){var d=new Date(ms);return tr('{d} um {t}',{d:fmtDate(d),t:pad(d.getHours())+':'+pad(d.getMinutes())})}
+function readDataFile(){
+  return dataFile.h.getFile().then(function(f){return f.text().then(function(t){
+    if(!t.trim())return{o:null,mtime:f.lastModified};
+    var o=null;try{o=JSON.parse(t)}catch(e){}
+    if(!valid(o))throw new Error('format');
+    return{o:o,mtime:f.lastModified};
+  })});
+}
+function writeDataRaw(){
+  var d=dataFile;
+  if(!state.stamp){state.stamp=newStamp();if(!EXE){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}}
+  var j=JSON.stringify(state,null,1),st=state.stamp;
+  return d.h.createWritable().then(function(w){return w.write(j).then(function(){return w.close()})}).then(function(){if(dataFile===d){setSync(st);d.savedAt=new Date();d.err=''}});
+}
+function adoptFile(o){
+  var v=state.view,m=state.months,z=state.zoom,lg=state.lang,fs=fstamp(o);
+  if(EXE&&!exeLoaded){v=o.view||v;m=Number(o.months)||m;z=Number(o.zoom)||z;lg=o.lang;exeLoaded=true}
+  state=migrate(o);state.view=v;state.months=m;state.zoom=z;keepLang(lg);state.stamp=fs;
+  if(!EXE){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+  setSync(fs);dataFile.savedAt=null;ui.editing=null;ui.confirmDel=null;ui.pending=null;
+  renderSettings();render();queueNames();
+}
+/* Abgleich nach dem Verbinden und bei jedem Start */
+function syncData(){
+  var d=dataFile;
+  return readDataFile().then(function(r){
+    d.ready=true;d.need=false;d.err='';d.conflict=null;
+    var o=r.o;if(!o)return writeDataRaw();
+    var fs=fstamp(o);
+    if(fs&&fs===state.stamp){setSync(fs);return}
+    if(d.sync&&fs===d.sync)return writeDataRaw();
+    if((d.sync&&state.stamp===d.sync)||isBlank()){adoptFile(o);return}
+    d.conflict={n:countAppts(o),mtime:r.mtime};
+  });
+}
+function queueData(){if(!dataFile||!dataFile.h||!dataFile.ready||dataFile.conflict)return;clearTimeout(dataT);dataT=setTimeout(function(){flushData()},EXE?30:350)}
+/* Vor jedem Schreiben wird geprüft, ob die Datei inzwischen von anderer Stelle geändert wurde. */
+function flushData(force){
+  var d=dataFile;if(!d.h||!d.ready||d.conflict)return;
+  if(d.busy){d.again=true;if(force)d.force=true;return}
+  var f=force||d.force;d.force=false;
+  if(!f&&state.stamp===d.sync)return;
+  d.busy=true;
+  readDataFile().then(function(r){
+    if(r.o&&fstamp(r.o)!==d.sync){d.switched=false;d.conflict={n:countAppts(r.o),mtime:r.mtime};return}
+    return writeDataRaw();
+  }).then(null,function(e){
+    var n=e&&e.name;
+    if(n==='NotAllowedError'){d.need=true;d.err=''}
+    else if(e&&e.message==='format')d.err=tr('Die Datei enthält keine gültigen Terminbuch-Daten mehr. Es wird nicht hineingeschrieben.');
+    else if(n==='NotFoundError')d.err=tr('Die Datei wurde nicht gefunden. Wurde sie verschoben oder gelöscht, bitte neu verbinden. Die Änderungen liegen im Browser.');
+    else if(EXE){d.err=tr('Die Datei ließ sich nicht schreiben. Die letzten Änderungen sind noch nicht gespeichert.');d.need=true}
+    else d.err=tr('Die Datei ließ sich nicht schreiben. Die Änderungen liegen im Browser und werden beim nächsten Speichern nachgetragen.');
+  }).then(function(){d.busy=false;if(dataFile===d)dataStatus();if(d.again){d.again=false;flushData()}});
+}
+function dataStatus(){
+  var d=dataFile,h=d.h,txt,bar='',btns='';
+  $('btnDataNew').hidden=$('btnDataOpen').hidden=!fsOK||!!h;$('btnDataUnlink').hidden=!h||EXE;$('btnDataGrant').hidden=!(h&&d.need);
+  $('fileLine').hidden=!fsOK&&!EXE;$('btnDataSetup').hidden=!!h||EXE;
+  if(EXE)document.body.classList.toggle('loading',!(h&&d.ready));
+  if(!fsOK&&!EXE)txt=tr('Eine Datendatei, in die jede Änderung von selbst geschrieben wird, gibt es nur mit Chrome oder Edge und der lokalen Datei Terminbuch.html. Hier liegen die Termine im Browser.');
+  else if(!h)txt=d.err||(EXE?tr('Die Daten werden geladen …'):tr('Keine Datendatei verbunden. Die Termine liegen nur in diesem Browser.'));
+  else if(d.need)txt=tr('Datendatei {f}: {m}',{f:h.name,m:(d.err||tr('Die Erlaubnis für diese Sitzung fehlt noch.'))+' '+(EXE?tr('Bis dahin wird nichts gespeichert.'):tr('Bis dahin wird nur im Browser gespeichert.'))});
+  else if(d.conflict)txt=tr('Datendatei {f}: abweichender Stand, das automatische Speichern ist angehalten.',{f:h.name});
+  else if(d.err)txt=tr('Datendatei {f}: {m}',{f:h.name,m:d.err});
+  else txt=d.savedAt?tr('Datendatei {f} · zuletzt gespeichert um {t}',{f:h.name,t:fmtClock(d.savedAt)}):tr('Datendatei {f} · auf dem aktuellen Stand',{f:h.name});
+  $('fileTxt').textContent=txt;$('fileLine').classList.toggle('bad',!!h&&!!(d.need||d.conflict||d.err));
+  $('dataNote').textContent=fsOK&&!h&&!d.err?tr('Mit einer Datendatei wird das ganze Terminbuch nach jeder Änderung von selbst in eine Datei geschrieben und beim Start daraus gelesen. Die Datei kann auf dem PC oder auf einer Netzwerkfreigabe liegen.'):txt;
+  if(h&&d.need){
+    bar=d.err?tr('Datendatei {f}: {m}',{f:h.name,m:d.err}):tr('Die Datendatei {f} ist verbunden. Der Browser verlangt für diese Sitzung noch die Erlaubnis zum Lesen und Schreiben.',{f:h.name});
+    btns='<button class="btn sm pri" data-act="dataGrant" id="btnBarGrant">'+(d.err?tr('Erneut versuchen'):tr('Zugriff erlauben'))+'</button>'+(EXE?'<button class="btn sm" data-act="dirPick" id="btnBarDir">'+tr('Anderen Ordner wählen')+'</button>':'');
+  }else if(h&&d.conflict){
+    bar=tr(EXE?(d.switched?'Die Datendatei {f} im gewählten Ordner enthält bereits ein anderes Terminbuch.':'Die Datendatei {f} wurde von anderer Stelle geändert.'):'Die Datendatei {f} enthält einen anderen Stand als dieser Browser.',{f:h.name})+' '+tr('In der Datei stehen {a}, zuletzt geändert am {w}. Hier stehen {b}. Welcher Stand soll gelten?',{a:plural(d.conflict.n,'Termin','Termine'),w:fmtWhen(d.conflict.mtime),b:plural(countAppts(state),'Termin','Termine')});
+    btns='<button class="btn sm pri" data-act="dataTake" id="btnDataTake">'+tr('Stand aus der Datei laden')+'</button><button class="btn sm" data-act="dataPush" id="btnDataPush">'+tr('Datei mit dem Stand hier überschreiben')+'</button>';
+  }
+  if(EXE&&!h&&d.err)bar=d.err;
+  $('dataBar').hidden=!bar;$('dataBarTxt').textContent=bar;$('dataBarBtns').innerHTML=btns;
+}
+function dataFail(e){
+  var d=dataFile;
+  if(e&&e.message==='format'){d.err=tr('Die Datendatei enthält keine gültigen Terminbuch-Daten. Es wird nicht hineingeschrieben.');if(EXE)d.need=true}
+  else{d.err=EXE&&e&&/^Datenordner/.test(e.message||'')?pyMsg(e.message)+'.':tr('Die Datei ließ sich nicht lesen. Liegt sie auf einem Laufwerk, das gerade nicht erreichbar ist?');d.need=true}
+  dataStatus();
+}
+function connectData(h,ok,inDir){
+  dataFile=noData();dataFile.h=h;setSync('');lsSet('terminbuch.dataInDir',inDir?'1':'');
+  return idb('readwrite',function(s){return s.put(h,'data')}).catch(function(){}).then(function(){if(!ok){dataFile.need=true;return}return syncData()});
+}
+function dataLinkFail(e){
+  if(e&&e.name==='AbortError')return;
+  dataFile=noData(e&&e.message==='format'?tr('Die gewählte Datei enthält kein Terminbuch. Sie wurde nicht verändert.'):tr('Die Datei ließ sich nicht verbinden.'));
+  idb('readwrite',function(s){return s.delete('data')}).catch(function(){});dataStatus();
+}
+function linkData(open){
+  var types=[{description:tr('Terminbuch-Daten (JSON)'),accept:{'application/json':['.json']}}];
+  var pick=open
+    ?window.showOpenFilePicker(pickOpts({types:types})).then(function(a){var h=a[0];return h.requestPermission({mode:'readwrite'}).then(function(p){return{h:h,ok:p==='granted'}})})
+    :window.showSaveFilePicker(pickOpts({suggestedName:'terminbuch-daten.json',types:types})).then(function(h){return{h:h,ok:true}});
+  pick.then(function(x){return connectData(x.h,x.ok,false)}).then(dataStatus,dataLinkFail);
+}
+function grantData(){
+  var h=dataFile.h;if(!h)return;dataFile.err='';
+  var viaDir=dirH&&lsGet('terminbuch.dataInDir')==='1';
+  (viaDir
+    ?dirH.requestPermission({mode:'readwrite'}).then(function(){return h.queryPermission({mode:'readwrite'})}).then(function(p){return p==='granted'?p:h.requestPermission({mode:'readwrite'})})
+    :h.requestPermission({mode:'readwrite'})
+  ).then(function(p){if(p==='granted')return syncData()}).then(dataStatus,dataFail);
+}
+function unlinkData(){dataFile=noData();setSync('');lsSet('terminbuch.dataInDir','');idb('readwrite',function(s){return s.delete('data')}).catch(function(){});dataStatus()}
+function dataTake(){
+  var d=dataFile;if(!d.h)return;
+  readDataFile().then(function(r){if(!r.o)throw new Error('leer');snap();d.conflict=null;adoptFile(r.o)}).then(dataStatus,dataFail);
+}
+function dataPush(){
+  var d=dataFile;if(!d.h)return;d.conflict=null;
+  writeDataRaw().then(dataStatus,function(){d.err=tr('Die Datei ließ sich nicht schreiben.');dataStatus()});
+}
+function initData(){
+  dataStatus();if(!fsOK)return;
+  idb('readonly',function(s){return s.get('data')}).then(function(h){
+    if(!h)return;dataFile.h=h;dataFile.sync=readSync();
+    return h.queryPermission({mode:'readwrite'}).then(function(p){if(p==='granted')return syncData();dataFile.need=true});
+  }).then(dataStatus,dataFail);
+}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'){clearTimeout(dataT);flushData()}});
+
+/* ---- Speicherordner: gespeicherte Dateien landen dort statt im Download-Ordner ---- */
+var dirH=null,canDir=fsOK&&typeof window.showDirectoryPicker==='function';
+function lsGet(k){try{return localStorage.getItem(k)||''}catch(e){return''}}
+function lsSet(k,v){if(EXE)return;try{localStorage.setItem(k,v)}catch(e){}}
+function pickOpts(o){o.id='terminbuch';if(dirH)o.startIn=dirH;return o}
+function ownFolder(){
+  if(location.protocol!=='file:')return'';
+  try{var p=decodeURIComponent(location.pathname).replace(/\/[^\/]*$/,'');if(/^\/[A-Za-z]:/.test(p))p=p.slice(1).replace(/\//g,'\\');return p}catch(e){return''}
+}
+function dirPerm(){
+  return dirH.queryPermission({mode:'readwrite'}).then(function(p){return p==='granted'?p:dirH.requestPermission({mode:'readwrite'})}).then(function(p){if(p!=='granted')throw new Error('perm')});
+}
+function dirWrite(name,blob){
+  return dirPerm().then(function(){return dirH.getFileHandle(name,{create:true})}).then(function(fh){return fh.createWritable()}).then(function(w){return w.write(blob).then(function(){return w.close()})});
+}
+function dirStatus(){
+  $('dirHead').textContent=tr(EXE?'Datenordner':'Speicherordner');
+  if(EXE){
+    $('btnDirOpen').hidden=!pyApi;$('btnDirOpen').textContent=tr('Ordner öffnen');$('btnDirPick').hidden=!pyApi;$('btnDirPick').textContent=tr('Anderen Ordner wählen');
+    $('btnDirUnlink').hidden=!(pyApi&&exeInfo.custom);$('btnDirUnlink').textContent=tr('Zurück zum Programmordner');
+    $('dirNote').textContent=exeInfo.dir?tr('Datenordner: {d}. Dort liegen die Datendatei, die täglichen Sicherungskopien im Unterordner Sicherungen und alles, was hier gespeichert wird.',{d:exeInfo.dir})+(exeInfo.note?' '+tr(exeInfo.note):''):'';
+    return;
+  }
+  var own=ownFolder();
+  $('btnDirPick').hidden=!canDir;$('btnDirPick').textContent=tr(dirH?'Anderen Ordner wählen':'Speicherordner wählen');$('btnDirUnlink').hidden=!dirH;$('btnDirUnlink').textContent=tr('Ordner trennen');
+  $('dirNote').textContent=!canDir?tr('Einen festen Speicherordner gibt es nur mit Chrome oder Edge und der lokalen Datei Terminbuch.html. Hier landen gespeicherte Dateien im Download-Ordner des Browsers.')
+    :dirH?tr('Speicherordner: {d}. Sicherung, Namensliste und Tagesblätter werden dort gespeichert, und die Dateidialoge öffnen sich dort.',{d:dirH.name})
+    :tr('Ohne Speicherordner landen Sicherung, Namensliste und Tagesblätter im Download-Ordner des Browsers. Am besten den Ordner wählen, in dem die Terminbuch.html liegt{own}. Ist noch keine Datendatei verbunden, wird dort terminbuch-daten.json angelegt oder geöffnet.',{own:own?' ('+own+')':''});
+}
+function pickDir(){
+  window.showDirectoryPicker({mode:'readwrite',id:'terminbuch'}).then(function(h){
+    dirH=h;msg($('dirMsg'),'');
+    return idb('readwrite',function(s){return s.put(h,'dir')}).catch(function(){}).then(function(){
+      dirStatus();
+      if(dataFile.h)return;
+      return h.getFileHandle('terminbuch-daten.json',{create:true}).then(function(fh){return connectData(fh,true,true)}).then(dataStatus,dataLinkFail);
+    });
+  }).then(null,function(e){if(e&&e.name==='AbortError')return;msg($('dirMsg'),tr('Der Ordner ließ sich nicht verbinden. Manche Ordner lässt der Browser nicht zu, ein eigener Unterordner geht.'))});
+}
+function unlinkDir(){dirH=null;idb('readwrite',function(s){return s.delete('dir')}).catch(function(){});dirStatus()}
+function initDir(){
+  if(!canDir){dirStatus();return Promise.resolve()}
+  return idb('readonly',function(s){return s.get('dir')}).then(function(h){dirH=h||null},function(){}).then(dirStatus);
+}
+/* ---- Browser-Speicher voll, zweites Fenster ---- */
+function storeStatus(){
+  var b=$('storeBar');if(!b)return;b.hidden=storageOK;
+  if(!storageOK)$('storeBarTxt').textContent=tr('Der Browser kann nicht mehr speichern, sein Speicher ist voll oder gesperrt.')+' '+(dataFile&&dataFile.h&&dataFile.ready&&!dataFile.conflict?tr('In die Datendatei wird weiter geschrieben.'):tr('Änderungen gehen beim Schließen der Seite verloren. Bitte sofort eine Sicherung erstellen oder eine Datendatei verbinden.'));
+}
+window.addEventListener('storage',function(ev){
+  if(ev.key===SKEY){dataFile.sync=ev.newValue||'';return}
+  if(ev.key!==KEY||!ev.newValue)return;
+  var o=null;try{o=JSON.parse(ev.newValue)}catch(e){}
+  if(!valid(o)||o.stamp===state.stamp)return;
+  var v=state.view,m=state.months,z=state.zoom,lg=state.lang;
+  state=migrate(o);state.view=v;state.months=m;state.zoom=z;keepLang(lg);
+  undo=[];ui.editing=null;ui.confirmDel=null;ui.pending=null;renderSettings();render();
+});
+
+/* ---- Programm-Modus (exe): Speichern und Laden laufen über das Python-Programm ---- */
+function exeHandle(name){
+  return{name:name,kind:'file',
+    getFile:function(){return pyApi.read(name).then(function(r){if(!r||!r.ok)throw new Error(r&&r.error||'read');return{lastModified:r.mtime||0,text:function(){return Promise.resolve(r.text||'')}}})},
+    createWritable:function(){var buf='';return Promise.resolve({write:function(x){buf=x;return Promise.resolve()},close:function(){return pyApi.write(name,buf).then(function(r){if(!r||!r.ok)throw new Error(r&&r.error||'write')})}})},
+    queryPermission:function(){return Promise.resolve('granted')},requestPermission:function(){return Promise.resolve('granted')}};
+}
+function blobB64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(',')[1]||'')};r.onerror=rej;r.readAsDataURL(blob)})}
+/* Datenordner im Programm wechseln: Liegt dort schon ein Terminbuch, wird es geladen oder nachgefragt; sonst wird der aktuelle Stand hineingeschrieben. */
+function exeSwitched(r,text){
+  exeInfo.dir=r.dir;exeInfo.custom=!!r.custom;exeInfo.note=r.note||'';dirStatus();
+  dataFile=noData();dataFile.h=exeHandle(exeInfo.data_file||'terminbuch-daten.json');dataFile.switched=true;dataStatus();
+  return syncData().then(function(){dataStatus();msg($('dirMsg'),text)},dataFail);
+}
+function exeChooseDir(){
+  if(!pyApi)return;msg($('dirMsg'),'');
+  pyApi.choose_folder().then(function(r){
+    if(!r||r.cancelled)return;
+    if(!r.ok){msg($('dirMsg'),r.error?pyMsg(r.error):tr('Der Ordner ließ sich nicht verwenden.'));return}
+    return exeSwitched(r,tr('Der Datenordner ist jetzt {d}. War dort noch kein Terminbuch, wurde der aktuelle Stand hineingeschrieben. Der bisherige Ordner bleibt unverändert.',{d:r.dir})+(r.remembered?'':' '+tr('Die Wahl ließ sich nicht dauerhaft merken.')));
+  },function(){msg($('dirMsg'),tr('Der Ordner ließ sich nicht wählen.'))});
+}
+function exeResetDir(){
+  if(!pyApi)return;msg($('dirMsg'),'');
+  pyApi.reset_folder().then(function(r){
+    if(!r||!r.ok){msg($('dirMsg'),r&&r.error?pyMsg(r.error):tr('Der Ordner ließ sich nicht wechseln.'));return}
+    return exeSwitched(r,tr('Der Datenordner ist wieder der Programmordner {d}.',{d:r.dir}));
+  },function(){msg($('dirMsg'),tr('Der Ordner ließ sich nicht wechseln.'))});
+}
+function initExe(){
+  $('nameFileHead').hidden=true;$('conFileNote').hidden=true;
+  dataStatus();dirStatus();
+  var tries=0;
+  (function wait(){
+    var api=window.pywebview&&window.pywebview.api;
+    if(api&&typeof api.read==='function'){pyApi=api;go();return}
+    if(++tries>300){dataFile.err=tr('Die Verbindung zum Programm kam nicht zustande. Bitte das Terminbuch schließen und neu starten.');dataStatus();return}
+    setTimeout(wait,50);
+  })();
+  function go(){
+    pyApi.info().then(function(inf){
+      exeInfo=inf||{};dirStatus();
+      dataFile=noData();dataFile.h=exeHandle(exeInfo.data_file||'terminbuch-daten.json');
+      return syncData();
+    }).then(dataStatus,dataFail);
+  }
+}
+
+ui.sel=firstOpenFrom(todayStr);
+renderSettings();render();
+if(EXE)initExe();else initDir().then(function(){initNameFile();initData()});
+window.__terminbuch={dayInfo:dayInfo,nextFree:nextFree,holidayName:holidayName,state:function(){return state},data:function(){return dataFile},save:save,render:render,planInsert:planInsert,flush:flushData,lang:lang,setLang:setLang,tr:tr,missing:function(){return Object.keys(miss)}};
+})();
+</script>
+</body></html>
