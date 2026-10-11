@@ -6,7 +6,9 @@ It was made for a doctor's practice that is open two days a week and booked mont
 
 ![Month overview with occupancy colours and the day sheet](screenshots/screenshot-en.png)
 
-The complete manual: [English](docs/description.md) · [Deutsch](docs/Programmbeschreibung.md)
+**[Try it in your browser](https://heinzbundschuh.github.io/Terminbuch/)** · The complete manual: [English](docs/description.md) · [Deutsch](docs/Programmbeschreibung.md)
+
+The online version is for trying it out: what you enter there stays in that browser only. For real use, download `Terminbuch.html` and choose a storage folder.
 
 ## Features
 
@@ -83,6 +85,7 @@ Names, phone numbers and appointments of patients are personal data. Use a passw
 | File | Purpose |
 | --- | --- |
 | `Terminbuch.html` | the whole program |
+| `index.html` | start page for the online version, forwards to `Terminbuch.html` |
 | `Terminbuch.ico` | the icon, for a desktop shortcut |
 | `docs/description.md` | the complete manual, in English |
 | `docs/Programmbeschreibung.md` | the complete manual, in German |
@@ -102,6 +105,8 @@ MIT, see [LICENSE](LICENSE).
 ## Deutsch
 
 Das Ordinations-Terminbuch ersetzt den Papierkalender am Empfang durch eine einzelne HTML-Datei, die im Browser läuft. Es verwaltet Termine mit frei wählbarer Dauer, zeigt freie und belegte Zeiten auf einen Blick und braucht weder Installation noch Internet. Die Oberfläche gibt es auf Deutsch und Englisch.
+
+**[Gleich im Browser ausprobieren](https://heinzbundschuh.github.io/Terminbuch/)** – was du dort einträgst, bleibt nur in diesem Browser. Für den echten Einsatz die Datei herunterladen.
 
 ### Schnellstart
 
