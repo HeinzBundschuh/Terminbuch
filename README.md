@@ -6,6 +6,8 @@ It was made for a doctor's practice that is open two days a week and booked mont
 
 ![Month overview with occupancy colours and the day sheet](screenshots/screenshot-en.png)
 
+The complete manual: [English](docs/description.md) · [Deutsch](docs/Programmbeschreibung.md)
+
 ## Features
 
 - **Month overview** for 1 to 12 months, either as occupancy in colour steps or as a timeline per day
@@ -82,6 +84,7 @@ Names, phone numbers and appointments of patients are personal data. Use a passw
 | --- | --- |
 | `Terminbuch.html` | the whole program |
 | `Terminbuch.ico` | the icon, for a desktop shortcut |
+| `docs/description.md` | the complete manual, in English |
 | `docs/Programmbeschreibung.md` | the complete manual, in German |
 | `screenshots/` | the pictures used on this page |
 | `LICENSE` | the licence text |
@@ -114,4 +117,4 @@ Empfohlen sind Chrome oder Edge. In Firefox läuft alles außer Speicherordner, 
 - Alle Daten bleiben auf dem eigenen PC, das Programm überträgt nichts.
 - Es ist ein Einzelplatzprogramm ohne Kennwort und ohne Verschlüsselung.
 - Die Sprache lässt sich in den Einstellungen bei **Sprache / Language** umstellen.
-- Die vollständige Beschreibung steht in [docs/Programmbeschreibung.md](docs/Programmbeschreibung.md).
+- Die vollständige Beschreibung steht in [docs/Programmbeschreibung.md](docs/Programmbeschreibung.md), auf Englisch in [docs/description.md](docs/description.md).
